@@ -1,4 +1,10 @@
 //SSL-Server.c
+/*
+    cc -c Server2.c `pkg-config openssl --cflags`
+    cc -o serv2 Server2.o `pkg-config openssl --libs`
+    ./serv2 5000
+*/
+
 #include <errno.h>
 #include <unistd.h>
 #include <malloc.h>
@@ -104,6 +110,45 @@ void ShowCerts(SSL* ssl)
     else
         printf("No certificates.\n");
 }
+
+// fonction callback à ajouter
+int verify_callback (int ok, X509_STORE_CTX *store)
+{
+  int depth = X509_STORE_CTX_get_error_depth(store);
+  X509 *cert = X509_STORE_CTX_get_current_cert(store);
+  int err = X509_STORE_CTX_get_error(store);
+ 
+  if(depth > 0) return ok; // just check server certif IP (at depth 0), else preverify "ok" is enough...
+ 
+  printf("+++++ check peer certificate +++++\n");
+  printf(" * preverify ok = %d\n", ok); 
+  printf(" * chain depth = %d\n", depth); 
+  printf(" * error code %i (%s)\n", err, X509_verify_cert_error_string(err));
+  char data[256];
+  X509_NAME_oneline(X509_get_issuer_name(cert), data, 256);
+  printf(" * issuer = %s\n", data);
+  X509_NAME_oneline(X509_get_subject_name(cert), data, 256);
+  printf(" * subject = %s\n", data);
+  char * certifip = data+4;
+   printf(" * certificate client IP = %s\n", certifip);
+  //char * serverip = inet_ntoa(addr.sin_addr);
+   char * serverip = "127.0.0.1";
+   printf(" * client IP = %s\n", serverip);
+   printf("test\n");    
+
+  if (ok) {      
+    if(strcmp(certifip,serverip) == 0) { 
+      printf("SUCCESS: certificate IP (%s) matches server IP (%s)!\n", certifip, serverip);   
+      return 1; // continue verification
+    }
+    else {
+      printf("FAILURE: certificate IP (%s) does not match server IP (%s)!\n", certifip, serverip);   
+      return 0; // stop verification
+    }
+  }
+ 
+  return 0; // stop verification
+}
  
 void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 {   char buf[1024];
@@ -151,14 +196,19 @@ int main(int count, char *strings[])
  
     portnum = strings[1];
     ctx = InitServerCTX();        /* initialize SSL */
-    LoadCertificates(ctx, "serv.cert.pem", "serv.privkey.pem"); /* load certs */
+    LoadCertificates(ctx, "serv2.cert.pem", "serv.privkey.pem"); /* load certs */
     server = OpenListener(atoi(portnum));    /* create server socket */
     while (1)
     {   struct sockaddr_in addr;
         socklen_t len = sizeof(addr);
         SSL *ssl;
  
+        // code à ajouter pour vérifier le certificat du serveur...
+        SSL_CTX_load_verify_locations (ctx, "host-ca.cert.pem",0);        
+        SSL_CTX_set_verify (ctx, SSL_VERIFY_PEER, verify_callback);
+
         int client = accept(server, (struct sockaddr*)&addr, &len);  /* accept connection as usual */
+
         printf("Connection: %s:%d\n",inet_ntoa(addr.sin_addr), ntohs(addr.sin_port));
         ssl = SSL_new(ctx);              /* get new SSL state with context */
         SSL_set_fd(ssl, client);      /* set connection socket to SSL state */
