@@ -1,0 +1,30 @@
+#!/bin/bash
+# exemple de réseau 
+# adaptation de scripts de Michel Billaud 
+# université bordeaux 1
+
+#Creer un dossier AR-UML dans le HOME
+
+RACINE="${HOME}/UML" 
+
+UMLTEMP="/tmp"
+
+PATH=$PATH:$RACINE/
+# Linux : /net/stockage/aguermou/uml/linux-3.0.0-nfs
+LINUX=${RACINE}/linux-3.0.0-nfs
+# Root : /net/stockage/aguermou//images/2013/root_fs_SR.tgz
+DEBIAN_FS=${RACINE}/root_fs
+COWPIE=$RACINE/$UMID
+
+unlink $HOME/UML-TMP
+UMLTMPDIR=`mktemp -d /tmp/UML-TMP-XXXXXX`
+ln -sf $UMLTMPDIR ${HOME}/UML-TMP
+
+source ${RACINE}/outils-uml-gterm-mem
+
+source $(dirname $0)/config
+
+RUN
+
+rm -fr ${UMLTMPDIR}
+exit

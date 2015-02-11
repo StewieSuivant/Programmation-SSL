@@ -1,0 +1,55 @@
+#!/bin/bash
+# exemple de réseau 
+# réalisé à partir de scripts de Michel Billaud 
+# université bordeaux 1
+
+UML_PATH="${RACINE}/uml-utilities/usr"
+export my_host=1
+export switch_list=""
+
+SWITCH () {
+        name=$1
+        all_switches="$all_switches $name"
+#        s=$UMLTEMP/$name.ctl
+        s=`mktemp $UMLTEMP/$name.ctl.XXXXXX`
+	switch_list="$switch_list $s "
+        fuser -k $s
+        ${UML_PATH}/bin/uml_switch -unix $s &
+        SWITCHPIDS="$SWITCHPIDS $!"
+}
+
+STOP_ALL_SWITCHES () {
+        kill -9 $SWITCHPIDS
+	rm -f $switch_list
+}
+
+HOST () {
+        name=$1
+        mkdir ${UMLTMPDIR}/$name
+        chmod -R a+rwx ${UMLTMPDIR}/$name
+	les_machines="$les_machines $name"
+        cmd="$LINUX  mem=400M con1=xterm con=null xterm=gnome-terminal,-t,-x hostfs=${UMLTMPDIR}/$name umid=$name devfs=nomount ubd0=${HOME}/AR-UML/${name}.cow,$DEBIAN_FS  my_umid=$name"
+        i=0
+        shift 1
+        for sw in $* ; do
+	        t=`echo ${UMLTEMP}/ | sed 's/\//\\\\\//g'`
+		s=`echo $switch_list | sed "s/.*\(${t}${sw}\.ctl\.......\).*/\1/"`
+                cmd="$cmd eth$i=daemon,a2:00:00:00:${my_host}:${i},,$s" 
+                i=`expr ${i} + 1`
+        done
+        let my_host=my_host+1
+        echo $cmd
+        (
+                 $cmd
+        ) &
+        export hpid="$hpid $!" 
+} 
+
+WAIT_FOR_HOSTS () {
+        for p in $hpid ; do wait $p ; done
+}
+
+RUN () {
+WAIT_FOR_HOSTS
+STOP_ALL_SWITCHES
+}

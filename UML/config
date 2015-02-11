@@ -1,0 +1,19 @@
+
+#
+#                    Alice - [s1] - Oscar - [s2] - Bob
+# 
+
+# switches 
+
+SWITCH s1
+SWITCH s2
+ 
+# machines
+# les connexions
+#
+#      machine  eth0 eth1 eth2 ...
+#
+
+HOST  Oscar    s1 s2 
+HOST  Alice    s1       
+HOST  Bob      s2
