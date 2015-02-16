@@ -1,0 +1,73 @@
+#! /bin/sh
+#
+# uml-utilities Provide some simple UML networking configuration
+#               services
+#
+#               Matt Zimmerman <mdz@debian.org>
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+DAEMON=/usr/bin/uml_switch
+NAME=uml_switch
+DESC="User-mode networking switch"
+PIDFILE=/var/run/uml-utilities/$NAME.pid
+
+test -x $DAEMON || exit 0
+
+set -e
+
+UML_SWITCH_OPTIONS=""
+UML_SWITCH_USER="uml-net"
+UML_SWITCH_CTL="/var/run/uml-utilities/uml_switch.ctl"
+
+if [ -e /etc/default/uml-utilities ]; then
+  . /etc/default/uml-utilities
+fi
+
+OPTIONS="$UML_SWITCH_OPTIONS -unix $UML_SWITCH_CTL"
+
+case "$1" in
+  start)
+	echo -n "Starting $DESC: "
+	if [ "x$UML_SWITCH_START" = "xfalse" ] ; then
+		echo " Disabled."
+		exit 0
+	else
+		echo -n " $NAME"
+	fi
+        start-stop-daemon --start --quiet --pidfile $PIDFILE \
+            --make-pidfile --background --chuid $UML_SWITCH_USER \
+            --exec $DAEMON -- $OPTIONS
+
+        WAIT=5
+        while ! test -e $UML_SWITCH_CTL; do
+            sleep 1
+            WAIT=$(($WAIT - 1))
+            if [ $WAIT -le 0 ]; then
+                echo "$DAEMON never created control socket $UML_SWITCH_CTL" >&2
+                exit 1
+            fi
+        done
+
+        chmod 777 $UML_SWITCH_CTL
+	echo "."
+	;;
+  stop)
+	echo -n "Stopping $DESC: $NAME"
+        start-stop-daemon --stop --quiet --pidfile $PIDFILE \
+            --oknodo --exec $DAEMON
+        rm -f $PIDFILE $UML_SWITCH_CTL $UML_SWITCH_DATA
+	echo "."
+	;;
+  restart|force-reload)
+        $0 stop
+        $0 start
+	;;
+  *)
+	N=/etc/init.d/$NAME
+	# echo "Usage: $N {start|stop|restart|reload|force-reload}" >&2
+	echo "Usage: $N {start|stop|restart|force-reload}" >&2
+	exit 1
+	;;
+esac
+
+exit 0

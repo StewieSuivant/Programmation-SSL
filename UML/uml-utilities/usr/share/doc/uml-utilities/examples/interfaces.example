@@ -1,0 +1,19 @@
+# Use this stanza if you want to configure an interface to connect
+# the uml_switch daemon to the host via a tap interface
+auto tap0
+iface tap0 inet static
+        address 192.168.1.1
+        netmask 255.255.255.0
+        tunctl_user uml-net
+
+# This is an example of how to set up a tap device for a particular
+# user to use, with an IP address on the local network (eth0) via
+# proxy ARP
+auto tap1
+iface tap1 inet static
+        address 192.168.1.1
+        netmask 255.255.255.255
+        tunctl_user omega
+        uml_proxy_arp 192.168.100.52
+        #uml_proxy_arp 192.168.100.52 192.168.100.53 192.168.100.54
+        uml_proxy_ether eth0

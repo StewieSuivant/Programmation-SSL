@@ -1,22 +1,43 @@
 \chapter*{Introduction}
 
 \paragraph{}
-SSL (Secure Sockets Layer) et TLS (Transport Layer Security) définissent des protocoles permettant de sécuriser des échanges sur internet. SSL a été initiallement développé par Netscape en 1995, avec la version SSL 2.0. L'IETF prend le relais à la suite de la version SSL 3.0, et renomme le protocole TLS. La dernière version à ce jour est TLS 1.2 sorti en 2008.
+SSL (Secure Sockets Layer) et TLS (Transport Layer Security) définissent des protocoles 
+permettant de sécuriser des échanges sur internet. SSL a été initiallement développé 
+par Netscape en 1995, avec la version SSL 2.0. L'IETF prend le relais à la suite de la 
+version SSL 3.0, et renomme le protocole TLS. La dernière version à ce jour est 
+TLS 1.2 sorti en 2008.
 
-Pour des raison de compatibilité, la majeure partie de ces versions sont encore utilisé à l'heure actuel.
+Pour des raison de compatibilité, la majeure partie de ces versions sont 
+encore utilisé à l'heure actuel.
 
 \paragraph{}
 TLS Fonctionne en mode client-serveur, et permet de répondre à plusieurs objectifs :
+\begin{itemize}
+\item L'authentification du serveur et/ou du client (authentification mutuelle).
+\item La confidentialité des données échangées.
+\item L'intégrité des données échangées.
+\end{itemize}
 
-* L'*authentification* du serveur et/ou du client (authentification mutuelle).
-* La *confidentialité* des données échangées.
-* L'*intégrité* des données échangées.
 
-\paragraph{}
-Son objectif initial et principal été de sécuriser le protocole HTTP, notemment pour sécuriser les paiements en ligne lors de l'essort du e-commerce. Aujourd'hui, son champs d'application s'est étendu : protection d'autres protocoles comme SMTP ou LDAP, création de VPN, etc...
-
-\paragraph{}
-Ce protocole étant largement utilisé par les serveurs et navigateurs web pour la sécurisation des échanges sur internet, il est également la cible de nombreuse attaques visant à voler une connexion, usurper une identité, écouter le trafic pour récolter des informations sensibles (mot de passe, information bancaire, etc...).
 
 \paragraph{}
-Nous allons faire, dans un premier temps, le tour des attaques découvertes à partir de 2011, reposant sur différents mécanismes. Dans un deuxième temps, nous rentrerons dans le détails de deux attaques récentes, à savoir POODLE et 3-Handshake, verrons leur implémentation et aborderons les contres-mesures envisageables. Nous conclurons en ......................................................... .
+Son objectif initial et principal est de sécuriser le protocole HTTP, 
+notamment pour sécuriser les paiements en ligne lors de l'essort du e-commerce. 
+Aujourd'hui, son champs d'application s'est étendu : protection d'autres 
+protocoles comme SMTP ou LDAP, création de VPN, etc...
+
+\paragraph{}
+Ce protocole étant largement utilisé par les serveurs et navigateurs web 
+pour la sécurisation des échanges sur internet, 
+il est également la cible de nombreuse attaques visant à voler une connexion, 
+usurper une identité, écouter le trafic pour récolter des informations sensibles 
+(mot de passe, information bancaire, etc...).
+
+\paragraph{}
+Nous allons faire, dans un premier temps, 
+le tour des attaques découvertes à partir de 2011, reposant sur différents mécanismes. 
+Dans un deuxième temps, nous rentrerons dans le détails de deux attaques récentes, 
+à savoir POODLE et 3-Handshake, verrons leur implémentation et aborderons 
+les contres-mesures envisageables. 
+Nous conclurons en ......................................................... .
+

@@ -1,0 +1,15 @@
+This package was debianized by Matt Zimmerman <mdz@debian.org> on
+Wed,  5 Dec 2001 07:46:29 -0500.
+
+It was downloaded from http://user-mode-linux.sourceforge.net/
+
+Upstream Author: Jeff Dike <jdike@karaya.com>
+
+Copyright (from */*.c):
+
+/* Copyright 2001 Jeff Dike and others
+ * Licensed under the GPL
+ */
+
+On Debian systems, a copy of the GNU General Public License (GPL) may
+be found in /usr/share/common-licenses/GPL.

@@ -1,0 +1,54 @@
+The easiest way to use virtual networking is to use the "daemon"
+transport with the uml_switch instance which is configured and running
+by default.
+
+1. Add an entry to /etc/network/interfaces to configure a persistent
+tap interface on the host:
+
+auto tap0
+iface tap0 inet static
+        address 192.168.1.1
+        netmask 255.255.255.0
+        tunctl_user uml-net
+
+2. Configure uml_switch to connect to this interface by editing
+/etc/default/uml-utilities:
+
+UML_SWITCH_OPTIONS="-tap tap0"
+
+3. Activate the tap interface:
+
+# ifup tap0
+
+4. Restart the daemon
+
+# /etc/init.d/uml-utilities restart
+
+5. Use the "daemon" transport with UML:
+
+$ linux eth0=daemon
+
+You should then be able to pass traffic between UML and the host over
+the tap interface.  You may also set up forwarding, masquerading,
+etc. in order to communicate beyond the host.  It is convenient to run
+dhcpd on the host, configured to listen on the tap0 interface and
+provide configuration information for UMLs as needed.
+
+As an alternative to the above procedure, to enable virtual networking
+using TUN/TAP directly from UML (the "tuntap" transport), add trusted
+users to the uml-net group, e.g.:
+
+adduser bill uml-net
+
+If you wish to use a different group or different permissions, use a
+statoverride for /usr/lib/uml/uml_net.  Note that members of the
+uml-net group will have privileges to do potentially harmful things to
+the system, such as reconfiguring network interfaces.
+
+Note also that the uml_net helper is installed in a different place in this
+package than by the upstream distribution (/usr/lib/uml/uml_net rather than
+PREFIX/bin/uml_net).  This is done in order to comply with FHS.  because
+uml_net is not meant to be executed by users, it does not belong in the system
+PATH.
+
+ -- Matt Zimmerman <mdz@debian.org>, Sun Sep 28 23:08:26 2003

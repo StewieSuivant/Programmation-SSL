@@ -1,0 +1,12 @@
+#!/bin/sh
+
+test -x /usr/sbin/tunctl || exit 0
+test -n "${IF_TUNCTL_USER}" || exit 0
+
+/usr/sbin/tunctl -u "${IF_TUNCTL_USER}" -t "${IFACE}"
+
+#
+# why the hell does this need to be done?
+#
+chown root:uml-net /dev/net/tun
+chmod 660 /dev/net/tun

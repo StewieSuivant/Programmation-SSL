@@ -1,0 +1,12 @@
+# Options to pass to uml_switch.
+
+# set to "false" if you want to prevent uml_switch from
+# starting with SysV scripts in /etc/init.d
+# UML_SWITCH_START="false"
+
+# For preconfigured tap setup, see
+# /usr/share/doc/uml-utilities/examples/interfaces.example
+UML_SWITCH_OPTIONS="-tap tap0"
+
+# User as which to run uml_switch
+UML_SWITCH_USER="uml-net"
