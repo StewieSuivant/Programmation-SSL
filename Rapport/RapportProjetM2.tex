@@ -1,4 +1,4 @@
-\documentclass[a4paper]{memoir}
+\documentclass[a4paper,openany]{memoir}
 
 %%%%% Packages %%%%%
 \usepackage{lmodern}
@@ -12,7 +12,7 @@
 \usepackage{amstext,amsmath,amssymb,amsfonts}
 \usepackage{multirow,colortbl}
 \usepackage{xspace,varioref}
-\usepackage{hyperref}
+\usepackage{hyperref, cite}
 
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
@@ -107,25 +107,25 @@
 %% chapters style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %% You may try several styles (see more in the memoir manual).
 
-\chapterstyle{veelo}
+%\chapterstyle{veelo}
 %\chapterstyle{chappell}
 %\chapterstyle{ell}
 %\chapterstyle{ger}
 %\chapterstyle{pedersen}
 %\chapterstyle{verville}
-%\chapterstyle{madsen}
+\chapterstyle{madsen}
 %\chapterstyle{thatcher}
 
 %% parts style %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \renewcommand*{\thepart}{\arabic{part}}
 
-\renewcommand*{\parttitlefont}{\chaptitlefont\Huge}
-\renewcommand*{\partnamefont}{\chapnamefont\HUGE}
-\renewcommand*{\partnumfont}{\chapnumfont\HUGE}
+\renewcommand*{\parttitlefont}{\chaptitlefont\HUGE}
+\renewcommand*{\partnamefont}{\chapnamefont\huge}
+\renewcommand*{\partnumfont}{\chapnumfont\huge}
 
 \renewcommand{\beforepartskip}{\vspace*{\fill}}
-\renewcommand{\midpartskip}{\vspace{.5em}\hrule height 1.5mm \vspace{.5em}}
+\renewcommand{\midpartskip}{\vspace{.5em}\hrule height 0.5mm \vspace{.5em}}
 \renewcommand{\afterpartskip}{\vspace*{\fill}}
 
 % table of contents
@@ -198,7 +198,7 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \part{Poodle}
-
+\label{part:poodle}
 \input{Poodle}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
