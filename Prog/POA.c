@@ -1,8 +1,13 @@
+/*
+cc -c POA.c `pkg-config openssl --cflags`
+cc -o POA POA.o `pkg-config openssl --libs`
+./POA
+*/
+
 #include <stdio.h>
 #include <unistd.h>
 #include <string.h>
 #include <openssl/des.h>
-#include <openssl/rand.h>
 
 static DES_cblock ivsetup = {0xE1, 0xE2, 0xE3, 0xD4, 0xD5, 0xC6, 0xC7, 0xA8};
 static DES_key_schedule key;
@@ -24,29 +29,16 @@ static void hex_print(const void* pv, size_t len)
 }
 
 
-/*void generate_key()
+void generate_key()
 {
     char* k = "abcdefgh";
     DES_cblock key_b;
     DES_string_to_key (k, &key_b);
-    if (DES_is_weak_key(&key_b) == 1)
+    /*if (DES_is_weak_key(&key_b) == 1)
         printf("Weak Key\n");
     else
-        printf("Strong Key\n");
+        printf("Strong Key\n");*/
     DES_set_key((C_Block *)key_b, &key);
-}*/
-
-
-void generate_key()
-{
-    unsigned char k[8];
-    DES_cblock key_b;
-
-    RAND_bytes(k, 8);
-    DES_string_to_key (k, &key_b);
-    DES_set_key((C_Block *)key_b, &key);
-
-    //printf("%x\n", key.ks->cblock);
 }
 
 
@@ -110,35 +102,36 @@ void Replace_Last_Block(char* msg)
 
 }
 
-char * changeRequest(char * request){
-int len = strlen(request);
-int i = 0;
- 
-char * newRequest = malloc(sizeof(char) * len);
- 
-for(i ; request[i] != '/' ; i++)
-newRequest[i] = request[i];
- 
-newRequest[i] = request[i];
-i++;
- 
-newRequest[i] = 'A';
- 
-for(i ; request[i] != '='; i++)
-newRequest[i+1] = request[i];
-int j = 0;
-for(j; j <= 8; ++j)
-newRequest[i+j+1] = request[i+j];
- 
-i+=j+1;
-for(i; i < len ; ++i)
-newRequest[i] = request[i];
- 
-return newRequest;
-} 
+char* changeRequest(char * request){
+
+    int len = strlen(request);
+    int i = 0;
+
+    char * newRequest = malloc(sizeof(char) * len);
+
+    for (i; i < 5; ++i)
+    {
+        newRequest[i] = request[i];
+    }
+    newRequest[5] = 'a';
+    i = 5;
+    while(request[i] != 'h'){
+        newRequest[i+1] = request[i];
+        ++i;
+    }
+    newRequest[i+1] = request[i];
+    i+=2;
+    for (i; i < len; ++i)
+    {
+        newRequest[i] = request[i];
+    }
+
+    return newRequest;
+}
 
 int Search_Byte(char* request)
 {
+    //char request[] = "GET / HTTP/1.1\r\n\r\nCookie:sessid=abcdefgh\r\n\r\nxxxx01234567";
     char *encrypted, *decrypted;
     int len = strlen(request);
     int i, byte;
@@ -150,13 +143,19 @@ int Search_Byte(char* request)
 
     Replace_Last_Block(encrypted);
 
-    memcpy(decrypted,Decrypt(encrypted,len), len);
-
-    if (decrypted[55] == '7')
+    for (i = 0; i < 256; ++i)
     {
-        byte = '7' ^ encrypted[47] ^ encrypted[31];
-        //printf("%c\n", (char)byte);
-        return byte;
+        encrypted[47] = i;
+
+        memcpy(decrypted,Decrypt(encrypted,len), len);
+
+        if (decrypted[55] == '7')
+        {
+
+            byte = '7' ^ encrypted[47] ^ encrypted[31];
+            printf("%c\n", (char)byte);
+            return byte;
+        }
     }
 
     return -1;
@@ -164,37 +163,33 @@ int Search_Byte(char* request)
 
 
 int main() {
-    char cookie[]="GET / HTTP/1.1\r\n\r\nCookie:sessid=password\r\n\r\nxxxxxxxxmmmmmmmmmmmmmmmmmmmm01234567";
+    char cookie[]="GET / HTTP/1.1\r\n\r\nCookie:sessid=ajdukfyh\r\n\r\nxxxx01234567";
     char *decrypted;
     char *encrypted;
     //int res;
     char res[9];
     char* request;
-    char result = 0;
      
     encrypted=malloc(sizeof(cookie));
     decrypted=malloc(sizeof(cookie));
 
     generate_key();
 
+    /*hex_print(cookie, 56);
+    memcpy(encrypted,Encrypt(cookie,sizeof(cookie)), sizeof(cookie));
+    hex_print(encrypted, 56);
+    memcpy(decrypted,Decrypt(encrypted,sizeof(cookie)), sizeof(cookie));
+    hex_print(decrypted, 56);*/
     int i = 0;
     memcpy(request, cookie, strlen(cookie));
     for (i; i < 8; ++i)
     {
-        char j = 0;
-        while((result=Search_Byte(request)) == -1)
-        {
-            j++;
-            generate_key();
-        }
-        printf("octet %d : %d tentatives\n", i, j);
-
-        res[7-i] = result;
+        res[7-i] = Search_Byte(request);
         memcpy(request, changeRequest(request), strlen(cookie));
         printf("%s\n",request);
     }
     res[8] = '\0';
     printf("\nbyte = %s\n", res);
-
+     
     return (0);
 }
