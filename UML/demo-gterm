@@ -5,7 +5,7 @@
 
 #Creer un dossier AR-UML dans le HOME
 
-RACINE="${HOME}/UML" 
+RACINE="${HOME}/Programmation-SSL/UML" 
 
 UMLTEMP="/tmp"
 
