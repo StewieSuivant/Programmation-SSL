@@ -16,8 +16,13 @@
 #include <resolv.h>
 #include "openssl/ssl.h"
 #include "openssl/err.h"
+#include "openssl/des.h"
+#include "Attack.h"
  
 #define FAIL    -1
+
+static DES_cblock ivsetup;
+static DES_key_schedule key;
  
 int OpenListener(int port)
 {   int sd;
@@ -133,8 +138,7 @@ int verify_callback (int ok, X509_STORE_CTX *store)
    printf(" * certificate client IP = %s\n", certifip);
   //char * serverip = inet_ntoa(addr.sin_addr);
    char * serverip = "127.0.0.1";
-   printf(" * client IP = %s\n", serverip);
-   printf("test\n");    
+   printf(" * client IP = %s\n", serverip); 
 
   if (ok) {      
     if(strcmp(certifip,serverip) == 0) { 
@@ -154,23 +158,69 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 {   char buf[1024];
     char reply[1024];
     int sd, bytes;
+    char* decrypted;
     const char* HTMLecho="<html><body><pre>%s</pre></body></html>\n\n";
+
  
-    if ( SSL_accept(ssl) == FAIL )     /* do SSL-protocol accept */
+    if ( SSL_accept(ssl) == FAIL ) {    /* do SSL-protocol accept */
         ERR_print_errors_fp(stderr);
+    }
     else
     {
         ShowCerts(ssl);        /* get any certificates */
-        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */
+        bytes = SSL_read(ssl, buf, sizeof(buf));
+	
         if ( bytes > 0 )
         {
             buf[bytes] = 0;
             printf("Client msg: \"%s\"\n", buf);
-            sprintf(reply, HTMLecho, buf);   /* construct reply */
-            SSL_write(ssl, reply, strlen(reply)); /* send reply */
+            sprintf(reply, HTMLecho, buf);  
+            SSL_write(ssl, reply, strlen(reply)); 
+        }
+        else
+	ERR_print_errors_fp(stderr);
+
+	memset(buf, 0, 1024);
+	bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */
+        if ( bytes > 0 )
+        {
+            buf[bytes] = 0;
+	    
+	    decrypted = malloc(sizeof(buf));
+	    memcpy(decrypted, Decrypt_DES(buf,bytes), bytes);
+            printf("Client Decypted: \"%s\"\n", decrypted);
+            //sprintf(reply, HTMLecho, buf);   /* construct reply */
+            SSL_write(ssl, "VALIDE", 6); /* send reply */
         }
         else
             ERR_print_errors_fp(stderr);
+
+	
+	//********************************************************
+	/*
+	int i;
+	int tmp;
+        for (i = 0; i < 8; ++i)
+        {
+	  tmp = 0;
+            while(tmp == 0){
+	      bytes = SSL_read(ssl, buf, sizeof(buf));
+	      decrypted = malloc(sizeof(char)*bytes);
+	      
+	      memcpy(decrypted, Decrypt_DES(buf,bytes), bytes);
+	      if(decrypted[bytes-1] != '7')
+                {
+		  SSL_write(ssl, "INVALIDE", 8);
+                }
+	      else
+                {
+		  SSL_write(ssl, "VALIDE", 6);
+		  tmp = 1;
+                }
+		}
+		}*/
+
+        //********************************************************
     }
     sd = SSL_get_fd(ssl);       /* get socket connection */
     SSL_free(ssl);         /* release SSL state */
@@ -196,7 +246,7 @@ int main(int count, char *strings[])
  
     portnum = strings[1];
     ctx = InitServerCTX();        /* initialize SSL */
-    LoadCertificates(ctx, "serv2.cert.pem", "serv.privkey.pem"); /* load certs */
+    LoadCertificates(ctx, "Serv.crt", "Serv.key"); /* load certs */
     server = OpenListener(atoi(portnum));    /* create server socket */
     while (1)
     {   struct sockaddr_in addr;
@@ -204,7 +254,7 @@ int main(int count, char *strings[])
         SSL *ssl;
  
         // code à ajouter pour vérifier le certificat du serveur...
-        SSL_CTX_load_verify_locations (ctx, "host-ca.cert.pem",0);        
+        SSL_CTX_load_verify_locations (ctx, "ca.crt",0);        
         SSL_CTX_set_verify (ctx, SSL_VERIFY_PEER, verify_callback);
 
         int client = accept(server, (struct sockaddr*)&addr, &len);  /* accept connection as usual */

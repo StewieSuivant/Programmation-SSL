@@ -9,8 +9,13 @@
 #include <netdb.h>
 #include <openssl/ssl.h>
 #include <openssl/err.h>
+#include "openssl/des.h"
+#include "Attack.h"
  
 #define FAIL    -1
+
+static DES_cblock ivsetup;
+static DES_key_schedule key;
 
 //struct sockaddr_in addr;
  
@@ -144,6 +149,12 @@ int main(int count, char *strings[])
     char buf[1024];
     int bytes;
     char *hostname, *portnum;
+    char cookie[] = "GET / HTTP/1.1\r\n\r\nCookie:sessid=password\r\n\r\nxxxxxxxxmmmmmmmmmmmmmmmmmmmm01234567";   
+    int len = strlen(cookie);
+    char* request = malloc(sizeof(cookie));
+    char* encrypted = malloc(sizeof(cookie));
+    char * result = malloc(sizeof(char)*9);
+    char* decrypted = malloc(sizeof(cookie));
  
     if ( count != 3 )
     {
@@ -155,10 +166,10 @@ int main(int count, char *strings[])
     portnum=strings[2];
  
     ctx = InitCTX();
-    LoadCertificates(ctx, "client.cert.pem", "client.privkey.pem"); /* load certs */
+    LoadCertificates(ctx, "Client.crt", "Client.key"); /* load certs */
 
     // code à ajouter pour vérifier le certificat du serveur...
-    SSL_CTX_load_verify_locations (ctx, "host-ca.cert.pem",0);        
+    SSL_CTX_load_verify_locations (ctx, "ca.crt",0);        
     SSL_CTX_set_verify (ctx, SSL_VERIFY_PEER, verify_callback);
 
     server = OpenConnection(hostname, atoi(portnum));
@@ -181,6 +192,42 @@ int main(int count, char *strings[])
         bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
         buf[bytes] = 0;
         printf("Received: \"%s\"\n", buf);
+
+	// ***************************************************************
+	
+	memcpy(encrypted,Encrypt_DES(request,len), len);	    
+	memcpy(decrypted, Decrypt_DES(encrypted,len), len);
+	printf("Client Decypted: \"%s\"\n", decrypted);
+	SSL_write(ssl, encrypted, len);   /* encrypt & send message */
+        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
+        buf[bytes] = 0;
+	printf("Received: \"%s\"\n", buf);
+	
+	/*
+	int i;
+	for (i = 0; i < 8; ++i)
+	  {
+	    while(strcmp(buf, "VALIDE") != 0)
+	      {
+		generate_key();
+		memcpy(encrypted,Encrypt_DES(request,len), len);
+		Replace_Last_Block(encrypted);
+		SSL_write(ssl, encrypted, len);
+ 
+		bytes = SSL_read(ssl, buf, sizeof(buf)); 
+		buf[bytes] = 0;
+	      }
+	    result[7-i] = '7' ^ encrypted[47] ^ encrypted[31];
+	    memcpy(request, changeRequest(request), strlen(cookie));
+	    memset(buf, 0, 1024);
+ 
+	  }
+	result[8] = '\0';
+ 
+	printf("cle = %s\n", res);
+	*/
+	// *************************************************************** 
+	
         SSL_free(ssl);        /* release connection state */
     }
     close(server);         /* close socket */

@@ -36,7 +36,7 @@ Sources
 
 * [best](https://www.imperialviolet.org/2014/10/14/poodle.html)
 * [best](https://www.openssl.org/~bodo/ssl-poodle.pdf)
-
+* [BEST](https://blog.skullsecurity.org/2013/padding-oracle-attacks-in-depth)
 
 BERserk
 =======

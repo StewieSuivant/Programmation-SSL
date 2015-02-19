@@ -2,23 +2,29 @@
 
 #Flags
 
-CFLAGS =  -Wall 
+CFLAGS =  
 CPPFLAGS = -I ../include
 LDFLAGS =-lm 
 
 .PHONY : clean help
 
-Server: Server.o
+Server: Server.o Attack.o
 	$(CC) ${CFLAGS} -o $@ $^  `pkg-config openssl --libs`
 
-Client: Client.o
+Client: Client.o Attack.o
 	$(CC) ${CFLAGS} -o $@ $^  `pkg-config openssl --libs`
 
-Client.o: Client.c
+Client.o: Client.c Attack.h
 	$(CC) ${CFLAGS} -c $< `pkg-config openssl --cflags`
 
-Server.o: Server.c
+Server.o: Server.c Attack.h
 	$(CC) ${CFLAGS} -c $< `pkg-config openssl --cflags`
+
+Attack : Attack.o
+	$(CC) ${CFLAGS} -o $@ $^  `pkg-config openssl --libs`
+
+Attack.o : Attack.c Attack.h
+	$(CC) ${CFLAGS} -c $<  `pkg-config openssl --cflags`
 
 clean:
 	@rm -rf *.o $(EXE) *~
