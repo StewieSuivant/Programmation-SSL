@@ -9,14 +9,14 @@ static char * cypherMode;
 static char * attackMode;
 
 //static DES_cblock ivsetup;
-//static DES_key_schedule key;
+static DES_key_schedule key;
 
 
 /************* Chiffrement *************/
 
 
 
-/*void generate_key()
+void generate_key()
 {
     unsigned char k[8];
     DES_cblock key_b;
@@ -28,7 +28,7 @@ static char * attackMode;
     //printf("%x\n", key.ks->cblock);
 }
 
-void generate_iv(){
+/*void generate_iv(){
   
   unsigned char iv[8];
   RAND_bytes(iv, 8);
@@ -44,7 +44,7 @@ char *
 Encrypt_DES( char *Msg, int size)
 {
   DES_cblock ivsetup;
-  DES_key_schedule key;
+  //DES_key_schedule key;
   unsigned char k[] = "abcdefgh";
   DES_cblock key_b;
   DES_string_to_key (k, &key_b);
@@ -75,7 +75,7 @@ Decrypt_DES( char *Msg, int size)
   char*    Res;
   DES_cblock iv2;
   DES_cblock ivsetup;
-  DES_key_schedule key;
+  //DES_key_schedule key;
 	
   unsigned char k[] = "abcdefgh";
   DES_cblock key_b;

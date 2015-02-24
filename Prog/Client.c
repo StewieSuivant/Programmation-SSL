@@ -149,7 +149,9 @@ int main(int count, char *strings[])
     char buf[1024];
     int bytes;
     char *hostname, *portnum;
-    char cookie[] = "GET / HTTP/1.1\r\n\r\nCookie:sessid=password\r\n\r\nxxxxxxxxmmmmmmmmmmmmmmmmmmmm01234567";   
+    // Problème si le cookie fait moins de 8 octets
+    char cookie[] = "GET / HTTP/1.1\r\n\r\nCookie:sessid=password\r\n\r\nxxxxxxxxmmmmmmmmmmmmmmmmmmmm01234567";
+    //char cookie[] = "test";
     int len = strlen(cookie);
     char* request = malloc(sizeof(cookie));
     char* encrypted = malloc(sizeof(cookie));
@@ -180,7 +182,7 @@ int main(int count, char *strings[])
         ERR_print_errors_fp(stderr);
     else
     {   char *msg = "Hello???";
-        long res = -1;
+        char res[9];
  
         printf("Connected with %s encryption\n", SSL_get_cipher(ssl));
         ShowCerts(ssl);        /* get any certs */
@@ -194,19 +196,24 @@ int main(int count, char *strings[])
         printf("Received: \"%s\"\n", buf);
 
 	// ***************************************************************
-	
-	memcpy(encrypted,Encrypt_DES(request,len), len);	    
+	// ****** Test read-write ssl ********
+	//memcpy(request,cookie,len);
+	/*memcpy(encrypted,Encrypt_DES(cookie,len), len);	    
 	memcpy(decrypted, Decrypt_DES(encrypted,len), len);
-	printf("Client Decypted: \"%s\"\n", decrypted);
-	SSL_write(ssl, encrypted, len);   /* encrypt & send message */
-        bytes = SSL_read(ssl, buf, sizeof(buf)); /* get reply & decrypt */
-        buf[bytes] = 0;
-	printf("Received: \"%s\"\n", buf);
+	printf("\n\nClient Cookie : '%s'\n", cookie);
+	printf("Client Decrypted: '%s'\n", decrypted);
 	
-	/*
+	SSL_write(ssl, encrypted, len);
+        bytes = SSL_read(ssl, buf, sizeof(buf));
+        buf[bytes] = 0;
+	printf("Received: \"%s\"\n", buf);*/
+	
+	// ******* Test recherche cookie *********
+	/*memcpy(request,cookie,len);
 	int i;
 	for (i = 0; i < 8; ++i)
 	  {
+	    printf("Octet num : %d\n", i);
 	    while(strcmp(buf, "VALIDE") != 0)
 	      {
 		generate_key();
@@ -224,8 +231,23 @@ int main(int count, char *strings[])
 	  }
 	result[8] = '\0';
  
-	printf("cle = %s\n", res);
-	*/
+	printf("cle = %s\n", res);*/
+
+	// ****** Test recherche octet ******
+	char octet;
+	while(strcmp(buf, "VALIDE") != 0)
+	      {
+		// Il faut trouver un moyen d'envoyer la clé de chiffrement au server
+		generate_key()
+		  
+		memcpy(encrypted,Encrypt_DES(cookie,len), len);
+		Replace_Last_Block(encrypted);
+		SSL_write(ssl, encrypted, len);
+		
+		bytes = SSL_read(ssl, buf, sizeof(buf)); 
+		buf[bytes] = 0;
+	      }
+
 	// *************************************************************** 
 	
         SSL_free(ssl);        /* release connection state */

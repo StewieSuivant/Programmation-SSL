@@ -180,31 +180,33 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
         else
 	ERR_print_errors_fp(stderr);
 
-	memset(buf, 0, 1024);
-	bytes = SSL_read(ssl, buf, sizeof(buf)); /* get request */
+	//********************************************************
+	
+	// ****** Test read-write ssl ********
+	/*memset(buf, 0, 1024);
+	bytes = SSL_read(ssl, buf, sizeof(buf));
         if ( bytes > 0 )
         {
             buf[bytes] = 0;
 	    
 	    decrypted = malloc(sizeof(buf));
 	    memcpy(decrypted, Decrypt_DES(buf,bytes), bytes);
-            printf("Client Decypted: \"%s\"\n", decrypted);
-            //sprintf(reply, HTMLecho, buf);   /* construct reply */
-            SSL_write(ssl, "VALIDE", 6); /* send reply */
+            printf("\n\nClient Decrypted: \"%s\"\n", decrypted);
+            //sprintf(reply, HTMLecho, buf);
+            SSL_write(ssl, "VALIDE", 6);
         }
         else
-            ERR_print_errors_fp(stderr);
+	ERR_print_errors_fp(stderr);*/
 
-	
-	//********************************************************
-	/*
-	int i;
+	// ******* Test recherche cookie *********
+	/*int i;
 	int tmp;
         for (i = 0; i < 8; ++i)
         {
 	  tmp = 0;
             while(tmp == 0){
 	      bytes = SSL_read(ssl, buf, sizeof(buf));
+	      buf[bytes] = 0;
 	      decrypted = malloc(sizeof(char)*bytes);
 	      
 	      memcpy(decrypted, Decrypt_DES(buf,bytes), bytes);
@@ -217,8 +219,11 @@ void Servlet(SSL* ssl) /* Serve the connection -- threadable */
 		  SSL_write(ssl, "VALIDE", 6);
 		  tmp = 1;
                 }
-		}
-		}*/
+	    }
+	    }*/
+
+	// ****** Test recherche octet ******
+	
 
         //********************************************************
     }

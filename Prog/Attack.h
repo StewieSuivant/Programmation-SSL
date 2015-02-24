@@ -2,8 +2,9 @@
 #define ATTACK_H
 
 
-/* genearate Random IV and Key 
+// genearate Random IV and Key 
 void generate_key();
+/*
 void generate_iv();
 void generate_IV_Key();*/
 /* DES function */
