@@ -11,3 +11,22 @@ Pour que l'attaque aboutisse, 2 conditions sont nécessaires :
 \end{itemize}
 
 \paragraph{}
+TLS propose, dans sa version ?.?, la compression. C'est à dire que les données à transmettre sont tout d'abord compressé, puis chiffrées avant d'etres transmisent sur internet.
+
+L'idée, c'est que l'attaquant va envoyer une requete POST via le navigateur de la victime, en y intégrant des données à lui.
+
+Pour illustrer ce qui se passe, prenons 2 chaines de caractères :
+\begin{itemize}
+\item C1 => ATTACKERDATA:x UNKNOWNCOOKIE:y OTHERDATA»
+\item C2 => ATTACKERDATA:y UNKNOWNCOOKIE:y OTHERDATA»
+\end{itemize}
+On apperçoit une redondance de la lettre 'y' dans C2, ce qui implique qu'après compression, C2 sera plus courte que C1. Le chiffrement ne modifiant pas la taille de la chaine, le chiffré de C2 sera également plus court que le chiffré de C1. Il y'a donc une fuite d'information.
+
+\paragraph{}
+Le code javascript injecter va envoyer des requettes POST vers le serveur maBanque.fr, en y ajoutant 'Cookie: sessionid=a'. Le navigateur de la victime va alors intégrer le vrai cookie dans la requete.
+%schéma POST /anyurl HTTP/1.1 Host: bank.com (…) Cookie: sessionid=d8e8fca2dc0f896fd7cb4cb0031ba249 (…) sessionid=a
+La requete est alors compressé puis chiffré. Si le 'a' correspond au 1er octet du cookie, ce que va intercepter l'attaquant sera de taille inférieure. Si ce n'est pas le cas, on retente avec 'b', puis 'c', etc... 
+On peut ainsi reconstituer le cookie d'authentification.
+
+\paragraph{}
+Pour corriger cette faille, il suffit simplement de désactiver l'option de copression sur le serveur et le client.
