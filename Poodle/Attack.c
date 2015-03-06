@@ -94,7 +94,7 @@ Replace_Last_Block(char* msg)
 
   for(i=32; i<=39; i++)
     {
-      msg[i+16] = msg[i];
+      msg[i+40] = msg[i];
     }
 
 }

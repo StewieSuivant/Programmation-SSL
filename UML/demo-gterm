@@ -11,9 +11,9 @@ UMLTEMP="/tmp"
 
 PATH=$PATH:$RACINE/
 # Linux : /net/stockage/aguermou/uml/linux-3.0.0-nfs
-LINUX=${RACINE}/linux-3.0.0-nfs
+LINUX="/net/stockage/aguermou/uml/linux-3.0.0-nfs"
 # Root : /net/stockage/aguermou//images/2013/root_fs_SR.tgz
-DEBIAN_FS=${RACINE}/root_fs
+DEBIAN_FS="/net/travail/ylaforgu/root_fs"
 COWPIE=$RACINE/$UMID
 
 unlink $HOME/UML-TMP

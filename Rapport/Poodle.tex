@@ -73,4 +73,25 @@ l'exeption du premier bloc (sauf si l'IV est connu).
 \chapter{Mise en place de l'attaque}
 \label{chapter:Poodleattack}
 
+\section{Packet SSL}
+
+Le Format des paquets SSL est le suivant : 
+
+insérer schema
+
+Type :
+\begin{itemize}
+\item 0x16 : Handshake
+\item 0x14 : Change Cypher Spec
+\item 0x15 : Alert
+\item 0x17 Application Data
+\end{itemize}
+
+Version :
+\begin{itemize}
+\item 0x3000 : SSLv3
+\item 0x30xy : TLSvx.y
+\end{itemize}
+
+
 

@@ -28,7 +28,7 @@ HOST () {
         mkdir ${UMLTMPDIR}/$name
         chmod -R a+rwx ${UMLTMPDIR}/$name
 	les_machines="$les_machines $name"
-        cmd="$LINUX  mem=400M con1=xterm con=null xterm=gnome-terminal,-t,-x hostfs=${UMLTMPDIR}/$name umid=$name devfs=nomount ubd0=${HOME}/AR-UML/${name}.cow,$DEBIAN_FS  my_umid=$name"
+        cmd="$LINUX  mem=400M con1=xterm con=null xterm=gnome-terminal,-t,-x hostfs=${UMLTMPDIR}/$name umid=$name devfs=nomount ubd0=/tmp/AR-UML/${name}.cow,$DEBIAN_FS  my_umid=$name"
         i=0
         shift 1
         for sw in $* ; do
