@@ -122,7 +122,7 @@ int main(int argc , char *argv[])
 	      memcpy(decrypted,Decrypt_DES(buf,len), len);
 
 	      printf("send result...\n");
-	      if((res = decrypted[55]) == '7')
+	      if((res = decrypted[79]) == '7')
 		{
 		  write(sock, "VALIDE", 6);
 		}

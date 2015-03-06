@@ -184,7 +184,7 @@ int main(int argc , char *argv[])
 	    }
 
 	}
-      res[7-i] = '7' ^ buf[47] ^ buf[31];
+      res[7-i] = '7' ^ buf[71] ^ buf[31];
        
       printf("Octet %d : %d tentatives\n", 7-i, tentative);
 

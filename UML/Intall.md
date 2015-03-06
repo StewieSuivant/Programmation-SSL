@@ -20,10 +20,25 @@
   * eth0 172.16.0.2/24
   * gw : 172.16.0.1
 
+* /etc/init.d/networking start
+
 ## Routage 
 
 * Oscar : echo 1 > /proc/sys/net/ipv4/ip_forward
 
+## Générer des Certificats
+
+* CA
+  * certtool --generate-privkey --outfile ca.key
+  * certtool --generate-self-signed --load-privkey ca.key --outfile ca.crt
+* Bob
+  * certtool --generate-privkey --outfile Bob.key*
+  * certtool --generate-certificate --load-privkey Bob.key --outfile Bob.crt --load-ca-certificate ca.crt --load-ca-privkey ca.key
+* Alice
+  * certtool --generate-privkey --outfile Alice.key
+  * certtool --generate-certificate --load-privkey Alice.key --outfile Alice.crt --load-ca-certificate ca.crt --load-ca-privkey ca.key
+
+* Les certificats de Alice et Bob sont signés par la CA
 
 ## Script au démarrage
 
