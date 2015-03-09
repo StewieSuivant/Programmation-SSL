@@ -76,8 +76,9 @@ l'exeption du premier bloc (sauf si l'IV est connu).
 \section{Packet SSL}
 
 Le Format des paquets SSL est le suivant : 
-
-insérer schema
+\begin{center}
+\includegraphics[scale=0.5]{schemaSSL.pdf}
+\end{center}
 
 Type :
 \begin{itemize}
@@ -92,6 +93,10 @@ Version :
 \item 0x3000 : SSLv3
 \item 0x30xy : TLSvx.y
 \end{itemize}
+
+Les données sont chiffrées et leurs tailles est indiquées par
+la longueur.
+
 
 
 

@@ -1,0 +1,21 @@
+Cette partie est un état de l'art des attaques sur SSL depuis plusieurs années.
+Elles peuvent être classifier en trois? grandes catégorie :
+
+\begin{itemize}
+\item Attaque "type BEAST "
+\item Time Attack
+\item Bug Attack
+\end{itemize}
+
+Toutes ses attaques utilisent des faiblesses d'implémentations.
+Ses attaques cherchent à obtenir la connaissance de données chiffrées
+sans craquer l'algorithme de chiffrement. 
+
+La plupart nécéssitent d'être en MITM (man in the middle) pour pouvoir
+fonctionner. Il est parfois nécéssaire de pouvoir injecter du code 
+sur le client.
+
+Ses contraintes peuvent parraitre compliquées à mettre en place.
+Dans les faits, Il est facile d'injecter du code sur un client
+grâce à/à cause d'une utilisation de plus en plus courante du langage
+javascript sur internet.
