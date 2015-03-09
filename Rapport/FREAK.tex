@@ -1,0 +1,24 @@
+\chapter{FREAK}
+\label{chap:freak}
+
+L'attaque FREAK (Factoring RSA-Export Key), 
+le A peut être pour Apple ou Android, découverte
+par Karthikeyan Bhargavan et l'équipe miTLS de L'inria
+de Paris, le 3 mars 2015.
+
+
+Cette vulnérabilité résulte d'une exigence de la NSA dans
+les années 90. Elle imposait des chiffrements
+facilement decryptable par eux aux produits vendus à l'étranger.
+Ces algorithmes furent baptisés "RSA-Export" et utilisaient
+des clés RSA de 512 bits.
+
+
+Bien entendu, ces algorithmes ne sont plus utilisés dans les
+implémentations actuelles mais pour un soucis de retro-compatibilité, ils subsistent toujours dans OpenSSL.
+
+
+Toutefois, une attaque en MITM peut forcer l'utilisation d'une
+RSA-Export, il est alors possible à l'attaquant de trouver
+la clé utilisé très rapidement. Les auteurs de l'attaque parlent
+d'une douzaine d'heure avec une instance Amazon EC2.
