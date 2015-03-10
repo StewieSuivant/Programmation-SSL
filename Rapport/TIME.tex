@@ -4,7 +4,17 @@
 En cryptanalyse, une timing attack est une attaque side channel dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy) et BREACH en font partie.
 
 \paragraph{}
-TIME est une attaque à clair choisit sur les réponses HTTP, découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui chreche les fuites d'information dans la taille des chiffrées, TIME cherche les fuites d'information dans le temps de compression des données. Le seul pré-requis nécessaire pour l'attaquant est de pouvoir forger les requetes du client. 
+TIME a été découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui chreche les fuites d'information dans la taille des chiffrées, TIME cherche les fuites d'information dans le temps de compression des données. Contrairement à CRIME, la compression utilisé s'effecture au niveau de HTTP.
+C'est une attaque à clair choisit qui cible les réponses HTTP.
+
+\paragraph{}
+Les seuls pré-requis nécessaires pour l'attaquant sont :
+\begin{itemize}
+  \item De pouvoir forger les requetes du client.
+  \item D'avoir un moyen de mesurer précisemment les temps de réponses du serveur.
+\end{itemize}
+
+\paragraph{}
 En réponse à une requête HTTP, la plupart des serveurs utilisent la compression des données. Cela permet de monopoliser le moins de bande passante possible.
 Comme dans CRIME, pour récupérer un octet, l'attaquant insère des données du type : "sessionid=a" dans l'entête de la requête. Une fois envoyé, il récupère le temps de réponse et peut répéter cette requête pour plus de précision. 
 L'attaquant itère l'octet recherché \(a -> b -> c -> ...\) et envoie les requètes. Le temps minimal de réponse indique l'octet recherché. Cela est dû au fait que l'octet étant le même que dans le cookie, la compression est plus efficace, prend moins de temps, et le serveur répond plus vite.
