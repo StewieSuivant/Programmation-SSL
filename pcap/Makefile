@@ -6,6 +6,11 @@ LDFLAGS =-lpcap
 
 .PHONY : clean help
 
+raw_socket: raw_socket.o
+	$(CC) ${CFLAGS} -o $@ $^
+
+raw_socket.o : raw_socket.c
+	$(CC) ${CFLAGS} -c $<  
 
 sniff : sniff.o
 	$(CC) ${CFLAGS} -o $@ $^ ${LDFLAGS}

@@ -20,7 +20,7 @@ struct sniff_ethernet {
 struct sniff_ip {
   u_char ip_vhl;		/* version << 4 | header length >> 2 */
   u_char ip_tos;		/* type of service */
-  u_short ip_len;		/* total length */
+  u_char ip_len[2];		/* total length */
   u_short ip_id;		/* identification */
   u_short ip_off;		/* fragment offset field */
 #define IP_RF 0x8000		/* reserved fragment flag */
@@ -62,8 +62,8 @@ struct sniff_tcp {
 
 struct sniff_ssl {
   u_char ssl_type;     /* Content Type */
-  u_short ssl_version;
-  u_short ssl_length; 
+  u_char ssl_version[2];
+  u_char ssl_length[2];
 };
 
 #endif
