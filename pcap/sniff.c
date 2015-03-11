@@ -27,11 +27,10 @@ Replace_Last_Block(char* msg)
 {
   int i;
 
-  for(i=32; i<=39; i++)
+  for(i=32; i<=38; i++)
     {
-      msg[i+40] = msg[i];
+      msg[i+64] = 'A';//msg[i];
     }
-
 }
 
 /***** Callback unction *****/
@@ -81,13 +80,14 @@ void got_packet(u_char *args, const struct pcap_pkthdr *header, const u_char *pa
   if(strcmp(inet_ntoa(ip->ip_dst),"172.16.0.2") == 0)
     {
       
-      if( ssl->ssl_type == 0x17 && Compteur == 0)// && tab2octet(ssl->ssl_length, 2) != 24)
+      if( ssl->ssl_type == 0x17)// && tab2octet(ssl->ssl_length, 2) != 24)
       	{
 	  Compteur ++;
       	  Replace_Last_Block(payload + 29);
+	  //payload[0] = 0;
       	}
 
-      printf("Compteur = %d\n", Compteur);
+      //printf("Compteur = %d\n", Compteur);
       
       sin.sin_family = AF_INET;
       sin.sin_port = tcp->th_dport;

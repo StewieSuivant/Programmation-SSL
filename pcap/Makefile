@@ -2,7 +2,7 @@
 
 CFLAGS =  
 CPPFLAGS = 
-LDFLAGS =-lpcap
+LDFLAGS =-lpcap -lssl
 
 .PHONY : clean help
 
@@ -16,7 +16,25 @@ sniff : sniff.o
 	$(CC) ${CFLAGS} -o $@ $^ ${LDFLAGS}
 
 sniff.o : sniff.c sniff.h
-	$(CC) ${CFLAGS} -c $<  
+	$(CC) ${CFLAGS} -c $<
+
+Client: Client.o Attack.o
+	$(CC) ${CFLAGS} -o $@ $^  ${LDFLAGS} `pkg-config openssl --libs`
+
+Client.o: Client.c Attack.h
+	$(CC) ${CFLAGS} -c $< `pkg-config openssl --cflags`
+
+Server: Server.o Attack.o
+	$(CC) ${CFLAGS} -o $@ $^   `pkg-config openssl --libs`
+
+Server.o: Server.c Attack.h
+	$(CC) ${CFLAGS} -c $< `pkg-config openssl --cflags`
+
+Attack : Attack.o
+	$(CC) ${CFLAGS} -o $@ $^  `pkg-config openssl --libs`
+
+Attack.o : Attack.c Attack.h
+	$(CC) ${CFLAGS} -c $<  `pkg-config openssl --cflags`
 
 clean:
 	@rm -rf *.o $(EXE) *~
