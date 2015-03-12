@@ -1,2 +1,54 @@
 \chapter{BEAST}
 \label{chapter:Beast}
+
+BEAST ( Browser Exploit Against SSL/TLS) est une attaque  découverte par Rizzo et Duong en septembre 2011.
+Elle se base sur une vulnérabilité sur CBC trouvée en 2004 par Gregory V. Bard. De plus, elle utilise une faille dans les
+navigateurs qui permet de violer le SOP (Same Origin Policy).
+
+Le SOP est un concept des application web qui spécifie qu'une page web A ne peut accéder aux données d'une page web
+B seulement si ils ont la même origine. Si elle n'était pas appliqué un site malveillant pourrait accéder aux
+données d'un autre et voler des informations à un utilisateur.\\
+
+Le mode CBC décrit plus haut~\ref{fig:cbc}, est le mode de chiffrement par bloc utilisé par SSL/TLS. 
+M. Bard a montré en 2004 que le protocole était vulnérable dans le cas d'une attaque CPA (choosen Plaintext Attack).
+
+CBC utilise un IV (initialisation vector), celui permet d'envoyer plusieur fois le même message clair
+avec des chiffrés différents. Dans SSL/TLS, l'IV corespond dernier au bloc de chiffré du message précédent.
+Un attaquant qui observe le réseau est donc capable de connaitre l'IV qui sera utilisé pour le prochaine message.
+
+Dans le cas d'une attaque CPA, il est possible d'envoyer des messages clairs chosis et d'obtenir leurs chiffrés
+via un oracle de chiffrement. Dans notre contexte, cela revient à demander à la cible d'envoyer des messages, et
+d'observer ce qui est envoyé sur le réseau.
+
+Un attaquant qui connait l'IV et peut créer ses messages peut essayer de retrouver le clair d'un bloc avec une 
+recherche exhaustive :
+
+\begin{itemize}
+\item Soit $C = C_1 || C_2 || C_3 || C_4$, un message intercepté par l'attaquant
+\item Soit $P_i = D(C_i) + C_{i-1}$ avec $1 \leq i \leq 4$ 
+\item Soit $C_i = E(P_i + C_{i-1} $
+\item L'attaquant cherche $C_3$
+\end{itemize}
+
+L'attaquant génére un message $P'$ comme suit :
+\[ P' = C_4 + P_3' + C_2 || \dots\]
+Ce qui donne le chiffré suivant :
+\[ C' = E(P_3' + C_2) || \dots \]
+Si $P_3' = P_3 $ alors $C_1' = C_3$, l'attaquant peut donc par recherche exhaustive retrouver le bloc $P3$, il peut
+procéder ainsi pour tout les blocs. 
+
+Il faudrait pour des blocs de taille 16 (AES) $2^{16}$ message par bloc, c'est aussi long qu'une recherche 
+exhaustive sur la clé. L'attaque tel quelle n'est pas très efficace. 
+
+Dans un message SSL/TLS, il est possible de connaitre une partie du clair. Dans le cas de l'envoie d'un cookie de 
+session, le message sera de la forme : \dots Cookie: sessid= dnu6YhPb5fd0kmQ \dots
+
+Si l'attaquant veut voler le cookie de session, il peut utiliser l'attaque ci-dessus. la cible envoie une première
+requête contenant le cookie de session tel que un des blocs soit "ookie: sessid= d". Ce bloc posséde un seul octet
+inconnu. Determiner cette octet avec l'attaque prendra au plus 8 essais.
+
+Il suffit ensuite de faire envoyer à la cible le même message mais décalé comme suit : "okie: sessid= dn", et
+réitérer jusqu'à reconstituer tout le cookie de session. 
+
+
+
