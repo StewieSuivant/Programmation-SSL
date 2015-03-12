@@ -12,9 +12,9 @@ Pour que l'attaque aboutisse, 2 conditions sont nécessaires :
 \end{itemize}
 
 \paragraph{}
-TLS propose, dans sa version ?.?, la compression. C'est à dire que les données à transmettre sont tout d'abord compressé, puis chiffrées avant d'etres transmisent sur internet.
+TLS propose, dans sa version ?.?, la compression. C'est à dire que les données à transmettre sont tout d'abord compressées, puis chiffrées avant d'etres transmisent sur internet.
 
-L'idée, c'est que l'attaquant va envoyer une requete POST via le navigateur de la victime, en y intégrant des données à lui.
+L'idée, c'est que l'attaquant va envoyer une requête via le navigateur de la victime, en y intégrant des données à lui.
 
 Pour illustrer ce qui se passe, prenons 2 chaines de caractères :
 \begin{itemize}
@@ -24,7 +24,7 @@ Pour illustrer ce qui se passe, prenons 2 chaines de caractères :
 On apperçoit une redondance de la lettre 'y' dans C2, ce qui implique qu'après compression, C2 sera plus courte que C1. Le chiffrement ne modifiant pas la taille de la chaine, le chiffré de C2 sera également plus court que le chiffré de C1. Il y'a donc une fuite d'information.
 
 \paragraph{}
-Le code javascript injecter va envoyer des requettes POST vers le serveur maBanque.fr, en y ajoutant 'Cookie: sessionid=a'. Le navigateur de la victime va alors intégrer le vrai cookie dans la requete (voir ci-dessous).
+Le code javascript injecter va envoyer des requêtes vers le serveur maBanque.fr, en y ajoutant 'Cookie: sessionid=a'. Le navigateur de la victime va alors intégrer le vrai cookie dans la requete (voir ci-dessous).
 
 
 \begin{verbatim}

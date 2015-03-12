@@ -2,20 +2,31 @@
 \label{chapter:time}
 
 \paragraph{}
-En cryptanalyse, une timing attack est une attaque side channel dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy) et BREACH en font partie.
+En cryptanalyse, une timing attack est une attaque par cannaux cachés dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy) et BREACH (Browser Reconnaissance and Exfiltration via Adaptative Compression of Hypertext) en font partie.
 
-\paragraph{}
-TIME a été découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui chreche les fuites d'information dans la taille des chiffrées, TIME cherche les fuites d'information dans le temps de compression des données. Contrairement à CRIME, la compression utilisé s'effecture au niveau de HTTP.
-C'est une attaque à clair choisit qui cible les réponses HTTP.
+\paragraph{Comment ça marche}
+TIME est une attaque à clair choisit découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps comme fuites d'information.
+Suite aux correction apportées à TLS après la découverte de CRIME, les attaques ne peuvent plus se baser sur la compression TLS. Cependant, la compression au niveau du protocole HTTP est toujours active, et ce pour des soucis d'optimisation de bande passante. C'est donc le temps de compression des données au niveau du serveur que l'attaquant va mesurer.
 
 \paragraph{}
 Les seuls pré-requis nécessaires pour l'attaquant sont :
 \begin{itemize}
-  \item De pouvoir forger les requetes du client.
+  \item De pouvoir forger les requêtes du client.
   \item D'avoir un moyen de mesurer précisemment les temps de réponses du serveur.
 \end{itemize}
+L'attaquant n'a plus besoin de se mettre en MITM. Le calcul du temps de réponse est directement prit au niveau du script injecté.
 
 \paragraph{}
-En réponse à une requête HTTP, la plupart des serveurs utilisent la compression des données. Cela permet de monopoliser le moins de bande passante possible.
-Comme dans CRIME, pour récupérer un octet, l'attaquant insère des données du type : "sessionid=a" dans l'entête de la requête. Une fois envoyé, il récupère le temps de réponse et peut répéter cette requête pour plus de précision. 
-L'attaquant itère l'octet recherché \(a -> b -> c -> ...\) et envoie les requètes. Le temps minimal de réponse indique l'octet recherché. Cela est dû au fait que l'octet étant le même que dans le cookie, la compression est plus efficace, prend moins de temps, et le serveur répond plus vite.
+Un facteur essentiel à prendre en compte pour une attaque réussie est le RTT (Round-Trip Time). Cette information représente le temps entre le momment où le client envoie une réquête et le moment où il reçoit l'acusé de reception. Si un paquet IP est inférieur à 1500 octets, ce qui correspond au MTU (Maximum Transmission Unit) sur internet, celui-ci n'est pas fragmenté et aura un RTT inférieur à un paquet supérieur à 1500 octets. Cette différence de RTT entre ces 2 paquets est assez significative pour être décelé. Une dernière information à prendre en compte est le fenêtrage TCP. Pour un gain de performance, il est possible d'envoyer T paquets sans avoir reçu un seul ACK. Le T+1 paquet est alors bloqué et doit attendre la reception du 1er ack et le coulissement de la fenêtre.\\
+
+Lattaquant va alors forcer la longueur des données compressées pour fragmenter le paquet. Ainsi, selon que l'octet à deviner soit bon ou pas, la compression sera plus ou moins performante, et le paquet sera ou non fragmentée. De plus, il faut qu'il comble toute la fenêtre TCP. Ainsi, tout paquet additionnel due à une mauvaise valeur de l'octet recherché rajoutera un RTT avec un delai relativement significatif Car ce paquet devra attendre l'ack du 1er paquet envoyé avant que la fenêtre ne coulisse pour lui permettre d'être envoyé.\\
+
+Pour un octet valide, le RTT sera alors plus court que pour un octet invalide.
+
+\paragraph{}
+Il est fort probable que du bruit soit présent sur le réseau. Si c'est le cas, pour chaque valeur d'un octet à deviner, il sera utile d'envoyer plusieurs fois la même requête et de considérer le temps de réponse minimale comme la valeur du RTT. Le RTT le plus court pour les différentes valeur d'un octet est alors considérée comme la bonne valeur.\\
+
+De proche en proche, l'attaquant peut récupérer le cookie de session de la victime et même plus.
+
+\paragraph{Contre-mesures}
+
