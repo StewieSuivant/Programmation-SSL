@@ -1,9 +1,11 @@
 \chapter{CRIME}
 \label{chapter:crime}
 
+\section{Présentation}
 \paragraph{}
-CRIME (Compression Ratio Info-leak Made Easy) est une attaque visant TLS, découverte en .... par les memes chercheurs que BEAST (Juliana Rizzo et Thai Duong). Cette attaque vise à récupérer de l'information lors d'une connexion sécurisée par TLS. Typiquement, l'attaquant cherche à découvrir le cookie de session de la victime afin d'usurper par la suite son identité.
+CRIME (Compression Ratio Info-leak Made Easy) est une attaque visant TLS, présentée en septembre 2012 par les mêmes chercheurs que BEAST (Juliana Rizzo et Thai Duong). Cette attaque tente à récupérer de l'information lors d'une connexion sécurisée par TLS. Typiquement, l'attaquant cherche à découvrir le cookie de session de la victime afin d'usurper par la suite son identité.
 
+\section{Comment ça marche}
 \paragraph{}
 Pour que l'attaque aboutisse, 2 conditions sont nécessaires :
 \begin{itemize}
@@ -52,5 +54,6 @@ sessionid=d
 
 Il suffit de répéter l'opération pour trouver les caractères suivants. L'attaquant peut ainsi reconstituer le cookie d'authentification.
 
+\section{Contre-mesures}
 \paragraph{}
-Pour corriger cette faille, il suffit simplement de désactiver l'option de copression sur le serveur et le client.
+Pour corriger cette faille d'implémentation, il suffit simplement de désactiver l'option de copression TLS sur le serveur et le client.

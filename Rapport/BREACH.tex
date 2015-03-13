@@ -1,11 +1,15 @@
 \chapter{BREACH}
 \label{chap:breach}
 
+\section{Présentation}
 \paragraph{}
-BREACH à été présenté en aout 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP. Contrairement à CRIME, cette attaque ne vise pas le cookie de session. Cela est due au fait le cookie de session se trouve dans l'entête HTTP alors que la compression HTTP ne cible que le corps de la réponse et non l'entête. Les informations secrètes pouvant êtres extraites doivent donc êtres présentes dans le corps de la réponse.\\
+BREACH à été présenté en aout 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP.
+
+Contrairement à CRIME, cette attaque ne vise pas le cookie de session. Cela est due au fait que le cookie de session se trouve dans l'entête HTTP alors que la compression HTTP ne cible que le corps de la réponse et non l'entête. Les informations secrètes pouvant êtres extraites doivent donc êtres présentes dans le corps de la réponse.\\
 
 L'algorithme de compression utilisé est DEFLATE. Il utilise lui-même 2 autres algorithme : LZ77 et le codage de Huffman.
 
+\section{Comment ça marche}
 \paragraph{}
 Les prérequis pour satisfaire cette attaque sont celles de CRIME :
 \begin{itemize}
@@ -14,7 +18,9 @@ Les prérequis pour satisfaire cette attaque sont celles de CRIME :
 \end{itemize}
 
 \paragraph{}
-L'attaquant va envoyer une requête contenant dans l'entête 'CSRFtoken=x'. ce Bout de code sera alors présent dans le corps de la réponse, ainsi que la vrai valeur du CSRF. Lorsque le serveur web va compresser le corps de la réponse, si la valeur x est bonne, le chiffré sera plus court que si elle ne l'est pas. L'attaquant teste donc toute les valeurs de 'x' possible jusqu'à tomber sur un chiffré plus court que les autres. De proche en proche, il peut retrouver la valeur entière de la donnée secrète recherchée.\\
+L'attaquant va envoyer une requête contenant dans l'entête 'CSRFtoken=x'. Ce bout de code sera alors présent dans le corps de la réponse, ainsi que la vrai valeur du CSRF. Lorsque le serveur web va compresser le corps de la réponse, si la valeur x est bonne, le chiffré sera plus court que si elle ne l'est pas. L'attaquant teste donc toute les valeurs de 'x' possible jusqu'à tomber sur un chiffré plus court que les autres.
+
+De proche en proche, il peut retrouver la valeur entière de la donnée secrète recherchée.\\
 
 Pour exemple, voilà ci-dessous une requète servant à trouver la valeur du CSRFtoken :
 
@@ -35,6 +41,15 @@ Et voilà la réponse HTTP du serveur web :
 (…)
 \end{verbatim}
 
-L'attaquant remarquera que la taille minimale des chiffrés des réponses HTTP est effective pour x = '4', et pourra considérer cette valeur comme exacte pour le 1er octet du jeton CSRF. De proche en proche, il peut retrouver la valeur entière de la donnée secrète recherchée.
+L'attaquant remarquera que la taille minimale du chiffré des réponses HTTP est effective pour x = '4', et pourra considérer cette valeur comme exacte pour le $1^{er}$ octet du jeton CSRF. Il pourra alors répéter l'opération pour les autres octets constituant la valeur secrète recherchée.
 
+\section{Contre-mesures}
+\paragraph{}
+Comme dans TIME, l'attaque n'aboutit qu'à condition que la donnée secrète recherchée soit également présente dans le corps de la réponse.
 
+\paragraph{}
+\begin{itemize}
+  \item Désactiver la compression au niveau de HTTP. Mais c'est à l'heure actuelle infaisable pour des raison de performance et de rapidité.
+  \item Ajouter des données inutile .
+  \item Utiliser des techniques pour limiter les requètes répétitves.
+\end{itemize}

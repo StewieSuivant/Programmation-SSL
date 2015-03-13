@@ -2,31 +2,45 @@
 \label{chapter:time}
 
 \paragraph{}
-En cryptanalyse, une timing attack est une attaque par cannaux cachés dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy) et BREACH (Browser Reconnaissance and Exfiltration via Adaptative Compression of Hypertext) en font partie.
+En cryptanalyse, une timing attack est une attaque par cannaux cachés dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy), BREACH (Browser Reconnaissance and Exfiltration via Adaptative Compression of Hypertext) et Lucky13 en font partie.
 
-\paragraph{Comment ça marche}
-TIME est une attaque à clair choisit découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps comme fuites d'information.
-Suite aux correction apportées à TLS après la découverte de CRIME, les attaques ne peuvent plus se baser sur la compression TLS. Cependant, la compression au niveau du protocole HTTP est toujours active, et ce pour des soucis d'optimisation de bande passante. C'est donc le temps de compression des données au niveau du serveur que l'attaquant va mesurer.
+\section{Présentation}
+\paragraph{}
+TIME est une attaque à clair choisit découverte par Tal Be'ery et Amichai Shulman en ... . A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps comme fuites d'information.\\
 
+Suite aux corrections apportées à TLS après la découverte de CRIME, les attaques ne peuvent plus se baser sur la compression TLS. Cependant, la compression au niveau du protocole HTTP est toujours active, et ce pour des soucis d'optimisation de bande passante. C'est donc le temps de compression des données au niveau du serveur que l'attaquant va mesurer.
+
+\section{Comment ça marche}
 \paragraph{}
 Les seuls pré-requis nécessaires pour l'attaquant sont :
 \begin{itemize}
-  \item De pouvoir forger les requêtes du client.
+  \item D'injecter un script pour forger les requêtes du client.
   \item D'avoir un moyen de mesurer précisemment les temps de réponses du serveur.
 \end{itemize}
-L'attaquant n'a plus besoin de se mettre en MITM. Le calcul du temps de réponse est directement prit au niveau du script injecté.
+
+L'attaquant n'a plus besoin de se mettre en MITM. Le calcul du temps de réponse est directement fait au niveau du script injecté.
 
 \paragraph{}
-Un facteur essentiel à prendre en compte pour une attaque réussie est le RTT (Round-Trip Time). Cette information représente le temps entre le momment où le client envoie une réquête et le moment où il reçoit l'acusé de reception. Si un paquet IP est inférieur à 1500 octets, ce qui correspond au MTU (Maximum Transmission Unit) sur internet, celui-ci n'est pas fragmenté et aura un RTT inférieur à un paquet supérieur à 1500 octets. Cette différence de RTT entre ces 2 paquets est assez significative pour être décelé. Une dernière information à prendre en compte est le fenêtrage TCP. Pour un gain de performance, il est possible d'envoyer T paquets sans avoir reçu un seul ACK. Le T+1 paquet est alors bloqué et doit attendre la reception du 1er ack et le coulissement de la fenêtre.\\
+Un facteur essentiel à prendre en compte pour une attaque réussie est le RTT (Round-Trip Time). Cette information représente le temps entre le momment où le client envoie une requête et le moment où il reçoit l'acusé de reception. Si un paquet IP est supérieur à 1500 octets, ce qui correspond au MTU (Maximum Transmission Unit) sur internet, celui-ci  sera fragmenté et aura potentiellement un RTT supérieur à un paquet non fragmenté (inférieur à 1500 octets). Cette différence de RTT entre ces 2 paquets est assez significative pour être décelé. Une dernière information à prendre en compte est le fenêtrage TCP. Pour un gain de performance, il est possible d'envoyer T paquets sans avoir reçu un seul ACK. Le T+1 paquet est alors bloqué et doit attendre la reception du 1er ack pour que la fenêtre d'envoie coulisse.\\
 
-Lattaquant va alors forcer la longueur des données compressées pour fragmenter le paquet. Ainsi, selon que l'octet à deviner soit bon ou pas, la compression sera plus ou moins performante, et le paquet sera ou non fragmentée. De plus, il faut qu'il comble toute la fenêtre TCP. Ainsi, tout paquet additionnel due à une mauvaise valeur de l'octet recherché rajoutera un RTT avec un delai relativement significatif Car ce paquet devra attendre l'ack du 1er paquet envoyé avant que la fenêtre ne coulisse pour lui permettre d'être envoyé.\\
+Pour qu'un attaquant puisse mettre en place cette attaque, il va forcer la longueur des données compressées jusqu'au seuil de fragmentation du paquet. Ainsi, selon que l'octet à deviner soit bon ou pas, la compression sera plus ou moins performante, et le paquet sera ou non fragmenté. De plus, il faut qu'il comble toute la fenêtre TCP. Ainsi, tout paquet additionnel due à une mauvaise valeur de l'octet recherché rajoutera un RTT avec un delai relativement significatif. En effet, ce paquet additionnel devra attendre l'ack du 1er paquet envoyé avant que la fenêtre ne coulisse pour lui permettre d'être envoyé.
 
 Pour un octet valide, le RTT sera alors plus court que pour un octet invalide.
 
 \paragraph{}
 Il est fort probable que du bruit soit présent sur le réseau. Si c'est le cas, pour chaque valeur d'un octet à deviner, il sera utile d'envoyer plusieurs fois la même requête et de considérer le temps de réponse minimale comme la valeur du RTT. Le RTT le plus court pour les différentes valeur d'un octet est alors considérée comme la bonne valeur.\\
 
-De proche en proche, l'attaquant peut récupérer le cookie de session de la victime et même plus.
+De proche en proche, l'attaquant peut récupérer le cookie de session de la victime et toutes autres données secrètes insérées dans lde corps de la réponse.
 
-\paragraph{Contre-mesures}
+\section{Contre-mesures}
+\paragraph{}
+Pour que cette attaque fonctionne, il faut que ce que l'attaquant ajoute dans le header de la requête HTTP soit également présent dans le corps de la réponse. Si c'est le cas, la compression sera éfficace, sinon, rien ne sera mesurable par l'attaquant.
 
+\paragraph{}
+Cette attaque étant une fois de plus due à des problèmes d'implémentations, les contre-mesures suivante sont ciblées sur l'implémentation :
+\begin{itemize}
+  \item Ajouter un delai aléatoire lors du déchiffrement peut rendre plus compliquer la recherche de la donnée secrète.
+  \item Désactiver la compression au niveau de HTTP. Cependant, ce n'est pas vraiment faisable sans impacter la performance et la rapidité des serveurs web.
+  \item Les contrôles doivent êtres plus rigoureux dans l'utilisation des entrées utilisateur dans les réponses HTTP.
+  \item Utiliser des techniques pour limiter les requètes répétitves.
+\end{itemize}
