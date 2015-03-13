@@ -3,41 +3,38 @@
 \paragraph{}
 SSL (Secure Sockets Layer) et TLS (Transport Layer Security) définissent des protocoles 
 permettant de sécuriser des échanges sur internet. SSL a été initiallement développé 
-par Netscape en 1995, avec la version SSL 2.0. L'IETF prend le relais à la suite de la 
-version SSL 3.0, et renomme le protocole TLS. La dernière version à ce jour est 
-TLS 1.2 sorti en 2008.
+par Netscape en 1995, avec la version SSL 2.0. L'IETF (Internet Engineering Task Force)
+prend le relais à la suite de la SSL 3.0, et renomme le protocole TLS.
+La dernière version à ce jour est TLS 1.2 sorti en 2008.
 
 Pour des raison de compatibilité, la majeure partie de ces versions sont 
-encore utilisé à l'heure actuel.
+encore disponible à l'heure actuel.
 
 \paragraph{}
-TLS Fonctionne en mode client-serveur, et permet de répondre à plusieurs objectifs :
+TLS fonctionne en mode client-serveur, et permet de répondre à plusieurs objectifs :
 \begin{itemize}
 \item L'authentification du serveur et/ou du client (authentification mutuelle).
 \item La confidentialité des données échangées.
-\item L'intégrité des données échangées.
+\item L'intégrité des données échangées.\\
 \end{itemize}
 
 
-
-\paragraph{}
 Son objectif initial et principal est de sécuriser le protocole HTTP, 
 notamment pour sécuriser les paiements en ligne lors de l'essort du e-commerce. 
 Aujourd'hui, son champs d'application s'est étendu : protection d'autres 
-protocoles comme SMTP ou LDAP, création de VPN, etc...
+protocoles comme SMTP ou LDAP, création de VPN, \dots
 
-\paragraph{}
+%\paragraph{}
 Ce protocole étant largement utilisé par les serveurs et navigateurs web 
 pour la sécurisation des échanges sur internet, 
-il est également la cible de nombreuse attaques visant à voler une connexion, 
+il est la cible de nombreuse attaques visant à voler une connexion, 
 usurper une identité, écouter le trafic pour récolter des informations sensibles 
-(mot de passe, information bancaire, etc...).
+(mot de passe, information bancaire, Cookie de session, \dots).
 
-\paragraph{}
-Nous allons faire, dans un premier temps, 
+%\paragraph{}
+Nous allons pour commencer faire, 
 le tour des attaques découvertes à partir de 2011, reposant sur différents mécanismes. 
-Dans un deuxième temps, nous rentrerons dans le détails de deux attaques récentes, 
-à savoir POODLE et 3-Handshake, verrons leur implémentation et aborderons 
+Pour finir, nous rentrerons dans le détails d'une attaque récente, 
+à savoir POODLE, verrons son implémentation et aborderons 
 les contres-mesures envisageables. 
-Nous conclurons en ......................................................... .
 

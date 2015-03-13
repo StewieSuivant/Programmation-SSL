@@ -16,6 +16,7 @@
 
 \usepackage[dvipsnames]{xcolor}
 \usepackage{graphicx}
+\usepackage{svg}
 
 \usepackage{appendix}
 \usepackage{makeidx}
@@ -188,13 +189,13 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 
 \input{classification}
 
+\input{BEAST}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%% POA %%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \input{POA}
-
-\input{BEAST}
 
 \input{Lucky_13} % TIMMING
 
@@ -240,6 +241,13 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 \appendix
 
 \listoffigures 
+
+\begin{figure}[h]
+\label{fig:cbc}
+\includegraphics[scale=0.5]{CBC_Encrypt}\\
+\includegraphics[scale=0.5]{CBC_Decrypt}
+\caption{Schéma du Mode CBC}
+\end{figure}
 
 \backmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 

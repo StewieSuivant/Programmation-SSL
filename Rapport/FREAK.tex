@@ -1,24 +1,43 @@
 \chapter{FREAK}
 \label{chap:freak}
 
-L'attaque FREAK (Factoring RSA-Export Key), 
-le A peut être pour Apple ou Android, découverte
-par Karthikeyan Bhargavan et l'équipe miTLS de L'inria
-de Paris, le 3 mars 2015.
+\section{Présentation}
+\label{sec:pFreak}
+
+L'attaque FREAK (Factoring RSA-Export Key, le A peut être pour Apple ou Android), découverte
+par Karthikeyan Bhargavan et l'équipe miTLS de l'inria de Paris, le 3 mars 2015.
 
 
-Cette vulnérabilité résulte d'une exigence de la NSA dans
-les années 90. Elle imposait des chiffrements
-facilement decryptable par eux aux produits vendus à l'étranger.
-Ces algorithmes furent baptisés "RSA-Export" et utilisaient
-des clés RSA de 512 bits.
+Cette vulnérabilité résulte d'une exigence de la NSA dans les années 90. Elle imposait des chiffrements
+facilement decryptables par eux aux produits vendus à l'étranger.
+Ces algorithmes furent baptisés "RSA-Export" et utilisaient des clés RSA de 512 bits.
 
 
-Bien entendu, ces algorithmes ne sont plus utilisés dans les
-implémentations actuelles mais pour un soucis de retro-compatibilité, ils subsistent toujours dans OpenSSL.
+Bien entendu, ces algorithmes ne sont plus utilisés dans les implémentations actuelles, mais pour un soucis de retro-compatibilité, ils subsistent toujours dans OpenSSL.
 
+\section{Comment ça marche}
+\label{sec:ccmFreak}
 
-Toutefois, une attaque en MITM peut forcer l'utilisation d'une
-RSA-Export, il est alors possible à l'attaquant de trouver
-la clé utilisé très rapidement. Les auteurs de l'attaque parlent
-d'une douzaine d'heure avec une instance Amazon EC2.
+Dans SSL/TLS, lors de la négociation de clé, l'algorithme de chiffrement choisi et censé être le plus
+robuste commum aux deux communiquant. Si l'attaquant est en MITM, il est capable de modifier la requête ClientHello.
+Cette requête envoi au serveur sa liste d'algorithmes disponibles. Cette liste est remplacé par RSA-Export. Le serveur
+va alors créer une clé de taille 512 bits et celle-ci sera accepté par le client.
+
+L'attaquant est en MITM, il peut donc observer le réseau et récupérer les clés publiques. Il lui reste alors à 
+chercher la factorisation de n. Il lui sera ensuite possible de déchiffrer tout les messages chiffrés entre le
+client et le serveur
+
+Trouver la factorisation d'une clé de 512 bits peut sembler difficile mais si l'attaquant est en mesure d'utiliser
+des gros serveurs de calculs, il peut le faire rapidement. A titre d'exemple, l'équipe miTLS, estime à 12 heures le temps de calcul avec un serveur Amazon EC2. Cette clé sera valide uniquement le temps de la session donc 12 heure 
+peut paraitre long mais dans les faits les clés de session ne change pas souvent.
+
+\section{Contre-Mesures}
+\label{sec:cmFreak}
+
+Cette attaque a besoin que le serveur et le client accepte d'utiliser les clés RSA-Export.
+
+Les serveurs qui accepte ces clés représentent environ 26 \% des serveurs SSL/TLS. Une mise à jour a été faites par
+TLS pour bloquer ces clés.
+
+Au niveau des navigateurs, tous n'était pas vulnérable. Les principaux sont Safari, chrome Android et IE. 
+A l'heure actuelle, chrome Android est toujours vulnérable, IE est patché et safari l'est en parti.

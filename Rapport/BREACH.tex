@@ -3,15 +3,13 @@
 
 \section{Présentation}
 \paragraph{}
-BREACH à été présenté en aout 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP.
-
-Contrairement à CRIME, cette attaque ne vise pas le cookie de session. Cela est due au fait que le cookie de session se trouve dans l'entête HTTP alors que la compression HTTP ne cible que le corps de la réponse et non l'entête. Les informations secrètes pouvant êtres extraites doivent donc êtres présentes dans le corps de la réponse.\\
+BREACH à été présenté en août 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP.
 
 L'algorithme de compression utilisé est DEFLATE. Il utilise lui-même 2 autres algorithme : LZ77 et le codage de Huffman.
 
 \section{Comment ça marche}
 \paragraph{}
-Les prérequis pour satisfaire cette attaque sont celles de CRIME :
+Les pré-requis pour satisfaire cette attaque sont les mêmes que CRIME :
 \begin{itemize}
   \item Pouvoir forger les requêtes du client.
   \item Se retrouver en MITM.
@@ -22,7 +20,7 @@ L'attaquant va envoyer une requête contenant dans l'entête 'CSRFtoken=x'. Ce b
 
 De proche en proche, il peut retrouver la valeur entière de la donnée secrète recherchée.\\
 
-Pour exemple, voilà ci-dessous une requète servant à trouver la valeur du CSRFtoken :
+Pour exemple, voilà ci-dessous une requête servant à trouver la valeur du CSRFtoken :
 
 \begin{verbatim}
 GET /product/?id=1234&user=CSRFtoken=x HTTP/1.1
@@ -30,26 +28,28 @@ Host: exemple.fr
 (…)
 \end{verbatim}
 
-Et voilà la réponse HTTP du serveur web :
+Et voilà la réponse HTTP du serveur web avant compression:
 
 \begin{verbatim}
-<form target="https://exemple.fr:443/products/catalogue.aspx?id=1234&user=CSRFtoken=x HTTP/1.1">
+<form target="https://exemple.fr:443/products/catalogue.a
+spx?id=1234&user=CSRFtoken=x HTTP/1.1">
 (...)
 <td nowrap id="tdErrLgf">
-<a href="logoff.aspx?CSRFtoken=4bd634cda846fd7cb4cb0031ba249ca2">Log Off</a>
+<a href="logoff.aspx?CSRFtoken=4bd634cda846fd7cb4cb0031ba
+249ca2">Log Off</a>
 </td>
 (…)
 \end{verbatim}
 
 L'attaquant remarquera que la taille minimale du chiffré des réponses HTTP est effective pour x = '4', et pourra considérer cette valeur comme exacte pour le $1^{er}$ octet du jeton CSRF. Il pourra alors répéter l'opération pour les autres octets constituant la valeur secrète recherchée.
 
-\section{Contre-mesures}
+\section{Contre-Mesures}
 \paragraph{}
-Comme dans TIME, l'attaque n'aboutit qu'à condition que la donnée secrète recherchée soit également présente dans le corps de la réponse.
+Comme dans TIME, l'attaque n'aboutit qu'à condition que la donnée secrète recherchée soit également présente dans le corps de la réponse. Pour se prémunir de cette attaque, nous pouvons :
 
-\paragraph{}
+%\paragraph{}
 \begin{itemize}
-  \item Désactiver la compression au niveau de HTTP. Mais c'est à l'heure actuelle infaisable pour des raison de performance et de rapidité.
-  \item Ajouter des données inutile .
-  \item Utiliser des techniques pour limiter les requètes répétitves.
+  \item Désactiver la compression au niveau de HTTP. Mais c'est à l'heure actuelle infaisable pour des raison de performance et de rapidité. 
+  \item Ajouter des données inutiles .
+  \item Utiliser des techniques pour limiter les requêtes répétiitves.
 \end{itemize}

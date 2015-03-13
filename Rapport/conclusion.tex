@@ -1,4 +1,13 @@
 \chapter*{Conclusion}
 \label{chapter:ccl}
 
-SSL s'est plein de failles donc c'est \textbf{NUL}.
+Tout au long de ce rapport, nous avons vu que le protocole SSL/TLS était la cible de nombreuses attaques visant à usurper une connexion ou récupérer des données sensibles. Malgrès des algorithmes de chiffrement robuste, c'est souvent dans leurs implémentations que le bât blesse.
+
+Alors que les failles sont assez vite patchées, l'interopérabilité entre les différents acteurs oblige à maintenir
+une retrocompatibilité avec les versions antérieures. Les failles mettent donc du temps à réellement disparaitre.
+La faille FREAK$^{\ref{chap:freak}}$ découverte il y a quelques semaines en est un bon exemple.
+
+Des efforts sont toutefois entrepris pour abandonner les version obsolètes à l'image du protocole SSLv2 qui n'est
+pratiquement plus utilisé.
+
+Tout cela nous montre que pour se diriger vers un protocole de plus en plus sûr, il est important de maintenir une veille active dans la recherche de faille. 

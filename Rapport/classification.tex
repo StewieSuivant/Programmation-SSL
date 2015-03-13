@@ -1,23 +1,23 @@
-Cette partie est un état de l'art des attaques sur SSL depuis plusieurs années.
-Elles peuvent être classifier en différentes catégorie :
+Dans cette partie nous allons faire un état de l'art des attaques sur SSL depuis plusieurs années.
+C'est dernières reposant sur des mecanismes différents, elles peuvent être classifier dans les catégories suivantes :
 
 \begin{itemize}
+\item Oracle Attack
 \item POA (Padding Oracle Attack)
 \item Compression Attack
 \item Timming Attack
-\item Alogorithm Weakness Attack
 \item Autres
 \end{itemize}
 
-Toutes ses attaques utilisent des faiblesses d'implémentations.
-Ses attaques cherchent à obtenir la connaissance de données chiffrées
-sans craquer l'algorithme de chiffrement. 
+Toutes ces attaques utilisent des faiblesses d'implémentations.
+Elles cherchent à obtenir la connaissance de données chiffrées
+sans casser l'algorithme de chiffrement. 
 
 La plupart nécéssitent d'être en MITM (man in the middle) pour pouvoir
 fonctionner. Il est parfois nécéssaire de pouvoir injecter du code 
 sur le client.
 
-Ses contraintes peuvent parraitre compliquées à mettre en place.
-Dans les faits, Il est facile d'injecter du code sur un client
+Ses contraintes peuvent paraître compliquées à mettre en place.
+Dans les faits, il est facile d'injecter du code sur un client
 grâce à/à cause d'une utilisation de plus en plus courante du langage
 javascript sur internet.
