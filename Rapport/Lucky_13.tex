@@ -34,7 +34,7 @@ Il y a trois cas possible :
 
 Le seveur va hashé son message pour le vérifier au MAC. Les hashs utilisés par SSL
 ont des blocs de 64 octets, donc si un message fait plus de 64 octets, il aura deux
-opération de hashs. De plus, c'est fonction ajoute au message au moins 1 octet de 
+opérations de hash. De plus, c'est fonction ajoute au message au moins 1 octet de 
 padding et 8 octets pour la longueur.
 
 Dans notre cas, le hash fait 13 + D + 9. Ce qui donne respectivement pour nos trois cas :
