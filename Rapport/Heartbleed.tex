@@ -3,7 +3,7 @@
 
 \section{Présentation}
 \paragraph{}
-Heartbleed, présente depuis mars 2012, a été révélée en avril 2014 par l'équipe de sécurité de Google et des ingénieurs de Codenomicon (société finlandaise). C'est une vulnérabilité logicielle due à une erreur de programmation dans la librairie openSSL.
+Heartbleed\up{\cite{article:Heartbleed2}}, présente depuis mars 2012, a été révélée en avril 2014 par l'équipe de sécurité de Google et des ingénieurs de Codenomicon (société finlandaise). C'est une vulnérabilité logicielle due à une erreur de programmation dans la librairie openSSL.
 
 Contrairement aux attaques précédentes qui cible assez clairement les informations à extraires, Heartbleed ne permet pas de choisir ce que l'on veut récupérer. Un attaquant utilisant cette attaque peut lire la mémoire d'un serveur et peut récupérer aussi bien des clés privées que des choses sans importances.
 
@@ -41,13 +41,13 @@ Il faut savoir que lorsqu'un serveur reçoit une requête, il l'enregistre dans 
 Le serveur va en fait prendre en compte la longueur demandé et non la taille du mot demandé. Ainsi, bien que le navigateur demande au serveur de lui renvoyer "ack", le serveur va déborder dans sa mémoire et renvoyer les logs d'autres requêtes.\\
 
 \begin{figure}[h]
-\label{fig:Principe de Heartbleed}
+\label{fig:Heartbleed}
 \centering
 \includegraphics[scale=0.2]{Heartbleed}
-\caption{Principe de Heartbleed}
+\caption{Principe de Heartbleed\up{\cite{article:Heartbleed}}}
 \end{figure}
 
-Ci-dessous est présenté la structure d'un message Heartbeat.
+Ci-dessous est présenté la structure d'un message Heartbeat\up{\cite{article:ZDNet}}.
 \begin{verbatim}
 struct {
 HeartbeatMessageType type;

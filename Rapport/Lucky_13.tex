@@ -1,18 +1,53 @@
 \chapter{Lucky 13}
 \label{chapter:luck}
 
-Cette attaque a été mise en évidence par Nadhem AlFardan and Kenny Paterson, le 4 Février 2013.
+En cryptanalyse, une timing attack\up{\cite{article:Timming}} est une attaque par cannaux cachés dans laquelle 
+un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution 
+de l'algorithme cryptographique. TIME, BREACH  et Lucky13 en font partie.
 
-Elle est basé sur le padding Oracle Attack. Le problème de POA est qu'il n'est pas possible de déterminer
-quand le padding est correct. En effet, quand celui-ci est validé, le serveur vérifie le MAC qui a été modifié par
-l'attaquant. 
+\section{Présentation}
+\label{sec:pL13}
+
+Cette attaque\up{\cite{article:study}} a été mise en évidence par Nadhem AlFardan and Kenny Paterson, le 4 Février 2013.
+
+Elle est basé sur le padding Oracle Attack\up{\ref{chapter:poa}}. Le problème de POA est qu'il n'est pas possible de déterminer
+quand le padding est correct. En effet, quand celui-ci est validé, le serveur vérifie le MAC qui a été modifié par l'attaquant.
 
 Dans lucky 13, l'idée est de se servir du temps de réponse pour obtenir cette information. C'est une TIMMING-ATTACK.
 Elle requiert d'être en MITM et pouvoir injecter du code sur le client.
 
-Soit un message M reçu par le serveur, \[ M = Sequence (8) || Header (5) || Data (D) || MAC (20) || PADDING (p) \]
+\section{Comment ça marche}
+\label{sec:ccmL13}
+
+Soit un message M de 77 octets reçu par le serveur, \[ M = Sequence (8) || Header (5) || Data (D = 44 -p) || MAC (20) || PADDING (p) \]
 
 Quand le serveur reçoit un message M, il le déchiffre et vérifie la taille du padding. 
-Ensuite il doit hasher  $M = Sequence (8) || Header (5) || Data (D)$  et le comparer au MAC 
+Ensuite il doit hasher  $M = Sequence (8) || Header (5) || Data (D = 44 - p)$  et le comparer au MAC 
 pour vérifier l'intégrité. Afin de savoir où se termine les données, il se sert de la taille du Padding.
 
+Il y a trois cas possible : 
+\begin{itemize}
+\item Le padding a une taille invalide alors p vaut 0 octet. $D=44$
+\item le padding a une taille valide de 0. $D=43$ 
+\item la padding a une taile valide de 1.$D=42$
+\end{itemize}
+
+Le seveur va hashé son message pour le vérifier au MAC. Les hashs utilisés par SSL
+ont des blocs de 64 octets, donc si un message fait plus de 64 octets, il aura deux
+opération deux hashs. De plus, c'est fonction ajoute au message au moins 1 octet de 
+padding et 8 octet pour la longueur.
+
+Dans notre cas, le hash fait 13 + D + 9. Ce qui donne respectivement pour nos trois cas :
+66, 65 et 64 octet. Le troisième aura une seule opération de MAC et deux pour les autres.
+Il est possible avec une TIMMING Attack de voir la différence. 
+
+L'attaque Lucky 13 se base sur ça pour son attaque. Quand elle repére une différence
+notable, elle peut appliquer la formule du Padding Oracle Attack.
+
+\section{Contre-Mesures}
+\label{sec:cmL13}
+
+Une contre-mesure simple serait de rajouter des délais dans les temps de réponses,
+ou bien de les uniformiser.
+
+De toute façon, cette attaque n'est pas réalisable car la différence est difficilement observable. 

@@ -4,8 +4,8 @@
 \section{Présentation}
 \label{sec:pFreak}
 
-L'attaque FREAK (Factoring RSA-Export Key, le A peut être pour Apple ou Android), découverte
-par Karthikeyan Bhargavan et l'équipe miTLS de l'inria de Paris, le 3 mars 2015.
+L'attaque FREAK\up{\cite{article:freak1}} (Factoring RSA-Export Key, le A peut être pour Apple ou Android), découverte
+par Karthikeyan Bhargavan et l'équipe miTLS\up{\cite{article:freak2}} de l'inria de Paris, le 3 mars 2015.
 
 
 Cette vulnérabilité résulte d'une exigence de la NSA dans les années 90. Elle imposait des chiffrements
@@ -36,7 +36,7 @@ peut paraitre long mais dans les faits les clés de session ne change pas souven
 
 Cette attaque a besoin que le serveur et le client accepte d'utiliser les clés RSA-Export.
 
-Les serveurs qui accepte ces clés représentent environ 26 \% des serveurs SSL/TLS. Une mise à jour a été faites par
+Les serveurs qui accepte ces clés représentent environ 26 \% des serveurs SSL/TLS\up{\cite{article:freak3}}. Une mise à jour a été faites par
 TLS pour bloquer ces clés.
 
 Au niveau des navigateurs, tous n'était pas vulnérable. Les principaux sont Safari, chrome Android et IE. 

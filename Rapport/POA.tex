@@ -1,11 +1,11 @@
 
 \chapter{Padding Oracle Attack}
-\label{chapter:POA}
+\label{chapter:poa}
 
 \section{Présentation}
 \label{sec:pPOA}
 
-Cette attaque a pour objectif de retrouver le clair d'un bloc chiffré 
+Cette attaque\up{\cite{article:poa}} a pour objectif de retrouver le clair d'un bloc chiffré 
 avec le mode CBC\up{\ref{fig:cbc}}. Elle s'appuie sur le fait que le dernier bloc chiffré
 contient du padding. De plus le dernier octet de padding corespond à la
 taille du padding.\\

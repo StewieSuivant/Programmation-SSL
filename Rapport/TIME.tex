@@ -1,12 +1,10 @@
 \chapter{TIME}
 \label{chapter:time}
 
-\paragraph{}
-En cryptanalyse, une timing attack est une attaque par cannaux cachés dans laquelle un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution de l'algorithme cryptographique. TIME (Timing Info-leak Made Easy), BREACH (Browser Reconnaissance and Exfiltration via Adaptative Compression of Hypertext) et Lucky13 en font partie.
 
 \section{Présentation}
 \paragraph{}
-TIME est une attaque à clair choisi découverte par Tal Be'ery et Amichai Shulman. A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps.
+TIME\up{\cite{article:study}} est une attaque à clair choisi découverte par Tal Be'ery et Amichai Shulman. A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps.
 
 Suite aux corrections apportées à TLS après la découverte de CRIME, les attaques ne peuvent plus se baser sur la compression TLS. Cependant, la compression au niveau du protocole HTTP est toujours active, et ce pour des soucis d'optimisation de bande passante. C'est donc le temps de compression des données au niveau du serveur que l'attaquant va mesurer.
 

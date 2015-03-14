@@ -182,7 +182,7 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 
 
 \input{Introduction}
-\addcontentsline{toc}{chapter}{Introduction}
+\addcontentsline{toc}{part}{Introduction}
 
 
 \part{Attaques sur SSL/TLS}
@@ -230,7 +230,7 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
-\input{conclusion}
+\input{conclusion} 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -240,19 +240,21 @@ Stewie Suivant \texttt{<stewie.suivant@etu.u-bordeaux.fr>}}
 \addcontentsline{toc}{part}{Annexes}
 \appendix
 
-\listoffigures 
-
 \begin{figure}[h]
 \label{fig:cbc}
 \includegraphics[scale=0.5]{CBC_Encrypt}\\
 \includegraphics[scale=0.5]{CBC_Decrypt}
-\caption{Schéma du Mode CBC}
+\caption{Schéma du Mode CBC\up{\cite{article:cbc}}}
 \end{figure}
+
+\clearpage
+
+\listoffigures 
 
 \backmatter%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \nocite{*}
-\bibliographystyle{plain}
+\bibliographystyle{unsrt}
 \bibliography{bibliography}
 
 \printindex

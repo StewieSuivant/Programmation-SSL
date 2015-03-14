@@ -2,9 +2,9 @@
 \chapter{Présentation}
 \label{chapter:poodlePres}
 
-L'attaque Poodle (Padding Oracle On Downgraded Legacy Encryption)
+L'attaque Poodle\up{\cite{article:ssl-poodle2}} (Padding Oracle On Downgraded Legacy Encryption)
 a été découverte par Bodo Möller, Thai Duong et 
-Krzysztof Kotowicz\cite{article:ssl-poodle} en septembre 2014.
+Krzysztof Kotowicz\up{\cite{article:ssl-poodle}} en septembre 2014.
 
 Cette attaque se base sur une faiblesse de SSLv3.
 Cependant elle fonctionne sur les dernières versions de TLS.
@@ -28,11 +28,11 @@ l'utilisation du mode CBC. Elle utilise le \emph{padding oracle attack }
 \section{Packet SSL}
 \label{sec:packet}
 
-Le Format des paquets SSL est le suivant : 
+Le Format des paquets SSL\up{\cite{article:ssl-packet}} est le suivant : 
 
-\begin{figure}[h]
+\begin{figure}[h] 
   \centering
-  \includegraphics[scale=0.5]{schemaSSL.pdf}
+  \includegraphics[scale=0.5]{schemaSSL2.pdf}
   \caption{Schéma d'un paquet SSL}
   \label{fig:ssl}
 \end{figure}
