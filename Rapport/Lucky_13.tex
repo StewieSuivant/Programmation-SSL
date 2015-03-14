@@ -10,7 +10,7 @@ de l'algorithme cryptographique. TIME, BREACH  et Lucky13 en font partie.
 
 Cette attaque\up{\cite{article:study}} a été mise en évidence par Nadhem AlFardan and Kenny Paterson, le 4 Février 2013.
 
-Elle est basé sur le padding Oracle Attack\up{\ref{chapter:poa}}. Le problème de POA est qu'il n'est pas possible de déterminer
+Elle est basée sur le padding Oracle Attack\up{\ref{chapter:poa}}. Le problème de POA est qu'il n'est pas possible de déterminer
 quand le padding est correct. En effet, quand celui-ci est validé, le serveur vérifie le MAC qui a été modifié par l'attaquant.
 
 Dans lucky 13, l'idée est de se servir du temps de réponse pour obtenir cette information. C'est une TIMMING-ATTACK.
@@ -34,8 +34,8 @@ Il y a trois cas possible :
 
 Le seveur va hashé son message pour le vérifier au MAC. Les hashs utilisés par SSL
 ont des blocs de 64 octets, donc si un message fait plus de 64 octets, il aura deux
-opération deux hashs. De plus, c'est fonction ajoute au message au moins 1 octet de 
-padding et 8 octet pour la longueur.
+opération de hashs. De plus, c'est fonction ajoute au message au moins 1 octet de 
+padding et 8 octets pour la longueur.
 
 Dans notre cas, le hash fait 13 + D + 9. Ce qui donne respectivement pour nos trois cas :
 66, 65 et 64 octet. Le troisième aura une seule opération de MAC et deux pour les autres.
