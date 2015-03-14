@@ -9,8 +9,8 @@ Krzysztof Kotowicz\up{\cite{article:ssl-poodle}} en septembre 2014.
 Cette attaque se base sur une faiblesse de SSLv3.
 Cependant elle fonctionne sur les dernières versions de TLS.
 Lors du handshake, le client et le serveur choisissent la version
-la plus récente qu'ils supportent. Si les deux utilises TLS,
-l'attaquant peut modifier le handshake pour les faire retrograder
+la plus récente qu'ils supportent. Si les deux utilisent TLS,
+l'attaquant peut modifier le handshake pour les faire rétrograder
 à SSLv3.
 
 C'est une attaque de typer Man-In-The-Middle.
@@ -28,7 +28,7 @@ l'utilisation du mode CBC. Elle utilise le \emph{padding oracle attack }
 \section{Packet SSL}
 \label{sec:packet}
 
-Le Format des paquets SSL\up{\cite{article:ssl-packet}} est le suivant : 
+Le format des paquets SSL\up{\cite{article:ssl-packet}} est le suivant : 
 
 \begin{figure}[h] 
   \centering
@@ -58,15 +58,15 @@ MAC :
 \item SHA256 : 32 octet de MAC
 \item \dots
 \end{itemize}
-Les données sont chiffrées et leurs tailles est indiquées par
+Les données sont chiffrées et leur taille est indiquée par
 la longueur.
 
 \section{Fonctionnement}
 \label{sec:fct}
 
-Le premier prés requis à satisfaire est de réussir à injecter du code sur le client. Ce code lui permet 
-de forger les requêtes à envoyer au serveur. Le seul changement sur les requêtes sera l'ajout de caractère pour
-aligner correctement l'entête afin que l'octet qu'il cherche soit en fin de bloc.
+Le premier prérequis à satisfaire est de réussir à injecter du code sur le client. Ce code lui permet 
+de forger les requêtes à envoyer au serveur. Le seul changement sur les requêtes sera l'ajout de caractères pour
+aligner correctement l'en-tête afin que l'octet qu'il cherche soit en fin de bloc.
 
 Pour rappel, un message chiffré par DES est découpé en bloc de 8 octets alors qu'avec AES, les blocs feront 16 octets. Dans la suite, nous considérerons l'utilisation d'un chiffrement DES.\\ 
 
@@ -82,7 +82,7 @@ L'attaquant cherchant à trouver le dernier octet du cookie de session va envoye
 Il intercepte alors le paquet chiffré, prend le bloc contenant "password" puis le recopie à la
 place du bloc de padding. Il envoie ce paquet modifié au serveur. 
 
- A la rececption du paquet, le serveur le déchiffre. Ensuite, il regarde le dernier octet du padding, qui corespond
+ A la récecption du paquet, le serveur le déchiffre. Ensuite, il regarde le dernier octet du padding, qui correspond
 à sa taille, et vérifie qu'il est inférieur à la taille d'un bloc. Il ne regarde pas le contenu du padding.
 Dans notre cas, le padding occupant un bloc entier, son dernier octet sera $0x07$. A partir de cette longueur, 
 il détermine la position des différentes parties du message. Il peut alors calculer le hashé des données et le comparer au MAC.
@@ -94,7 +94,7 @@ Notre requête modifiée ne sera acceptée que si le déchiffrement de l'octet r
 le cas, le serveur rejette le paquet et met fin à la connexion. Le script doit alors renégocier une clé avec le
 serveur puis l'attaquant recommence avec le même clair.\\
 
- La requête a une chance sur 256 d'être acceptée, et cela indépendament des autres requêtes. Une fois qu'elle est
+ La requête a une chance sur 256 d'être acceptée, et cela indépendamment des autres requêtes. Une fois qu'elle est
 acceptée, il est possible de déterminer la valeur de l'octet recherché grâce au calcul suivant
 \[ P_i[7] = 7 + C_{n-1}[7] + C_{i-1}[7] \]
 avec i le numéro du bloc contenant "password" et n le nombre de bloc.
@@ -108,7 +108,7 @@ Pour s'attaquer à l'octet suivant, il faut simplement réaligner la requête co
 \caption{Paquet envoyé}
 \end{figure}
 
-Il s'agit maintenant pour l'attaquant de réitérer l'oppération jusqu'à trouver l'ensemble du cookie.
+Il s'agit maintenant pour l'attaquant de réitérer l'opération jusqu'à trouver l'ensemble du cookie.
 
 \section{Implémentation}
 \label{sec:imp}
@@ -124,18 +124,18 @@ Poodle étant basé sur POA, nous avons tout  d'abord implémenté ce dernier av
  Le client chiffre son
 message, remplace le dernier bloc par le bloc contenant l'octet recherché et modifie le dernier octet de l'avant-dernier bloc avant de l'envoyer au serveur. Celui-ci le déchiffre et vérifie si la taille du padding est correct. Si
 tel est le cas, il envoie le message "VALIDE" au client, qui calcule alors l'octet recherché et passe au suivant.
-Sinon, il répète l'opperation jusqu'à recevoir "VALIDE".\\
+Sinon, il répète l'opération jusqu'à recevoir "VALIDE".\\
 
-De cette première implémentation, nous avons enchainé sur celle de POODLE. Cette fois, nous avons trois acteurs,
+De cette première implémentation, nous avons enchaîné sur celle de POODLE. Cette fois, nous avons trois acteurs,
 Alice, Bob et Oscar. Alice chiffre son message et l'envoie à Oscar. Celui-ci le récupére, remplace le dernier bloc
-comme pour POA et le retransmet imédiatement à Bob. Ce dernier procéde comme le serveur de POA. Si Alice reçoit
+comme pour POA et le retransmet imédiatemment à Bob. Ce dernier procéde comme le serveur de POA. Si Alice reçoit
 "INVALIDE", elle renégocie la clé et renvoie le même message. Sinon elle décale son message pour récupérer le 
-prochain octet et procéde comme précédement.\\
+prochain octet et procède comme précédemment.\\
 
-Nous avons tenté d'implémenter cette attaque dans un vrai contexte SSL. L'idée est faire un programme qui permet à
+Nous avons tenté d'implémenter cette attaque dans un vrai contexte SSL. L'idée est de faire un programme qui permet à
 Oscar de récupérer les messages transmis entre Alice et Bob et de le modifier si besoin. Il est capable de filtrer
-les messages en fonctions de leurs types SSL (voir plus haut). Il va donc laisser passer le Handshake et ne s'intéressé qu'au type \emph{Application Data}. Il forge une requête avec le contenu du paquet qu'il reçoit et modifie le
-bloc de padding comme d'habitude avant de l'envoyer. Pour éviter les problèmes de numéro de séquence, Oscar rejete 
+les messages en fonction de leurs types SSL (voir plus haut). Il va donc laisser passer le Handshake et ne s'intéresser qu'au type \emph{Application Data}. Il forge une requête avec le contenu du paquet qu'il reçoit et modifie le
+bloc de padding comme d'habitude avant de l'envoyer. Pour éviter les problèmes de numéro de séquence, Oscar rejette 
 au niveau du firewall, les paquets en provenance d'Alice et à destination de Bob.
 
 Pour diverses raisons, ce modèle n'a pu être finalisé. En effet, lorsque Bob recevait un message erroné,

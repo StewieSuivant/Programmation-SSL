@@ -4,7 +4,7 @@
 
 \section{Présentation}
 \paragraph{}
-TIME\up{\cite{article:study}} est une attaque à clair choisi découverte par Tal Be'ery et Amichai Shulman. A l'instar de CRIME qui utilise comme fuites d'information la taille des chiffrées, TIME utilise le temps.
+TIME\up{\cite{article:study}} est une attaque à clair choisi découverte par Tal Be'ery et Amichai Shulman. A l'instar de CRIME qui utilise comme fuite d'informations la taille des chiffrées, TIME utilise le temps.
 
 Suite aux corrections apportées à TLS après la découverte de CRIME, les attaques ne peuvent plus se baser sur la compression TLS. Cependant, la compression au niveau du protocole HTTP est toujours active, et ce pour des soucis d'optimisation de bande passante. C'est donc le temps de compression des données au niveau du serveur que l'attaquant va mesurer.
 
@@ -19,13 +19,13 @@ Les seuls pré-requis nécessaires pour l'attaquant sont :
 L'attaquant n'a plus besoin de se mettre en MITM. Le calcul du temps de réponse est directement fait au niveau du script injecté.
 
 \paragraph{}
-Un facteur essentiel à prendre en compte pour une attaque réussie est le RTT (Round-Trip Time). Cette information représente le temps entre le moment où le client envoie une requête et le moment où il reçoit l'acusé de reception. Si un paquet IP est supérieur à 1500 octets, ce qui correspond au MTU (Maximum Transmission Unit) sur internet, celui-ci  sera fragmenté et aura potentiellement un RTT supérieur à un paquet non fragmenté (inférieur à 1500 octets). Cette différence de RTT entre ces 2 paquets est assez significative pour être décelée. Une dernière information à prendre en compte est le fenêtrage TCP. Pour un gain de performance, il est possible d'envoyer T paquets sans avoir reçu un seul ACK. Le T+1 paquet est alors bloqué et doit attendre la reception du 1er ack pour que la fenêtre d'envoie coulisse.\\
+Un facteur essentiel à prendre en compte pour une attaque réussie est le RTT (Round-Trip Time). Cette information représente le temps entre le moment où le client envoie une requête et le moment où il reçoit l'accusé de reception. Si un paquet IP est supérieur à 1500 octets, ce qui correspond au MTU (Maximum Transmission Unit) sur internet, celui-ci  sera fragmenté et aura potentiellement un RTT supérieur à un paquet non fragmenté (inférieur à 1500 octets). Cette différence de RTT entre ces 2 paquets est assez significative pour être décelée. Une dernière information à prendre en compte est le fenêtrage TCP. Pour un gain de performance, il est possible d'envoyer T paquets sans avoir reçu un seul ACK. Le T+1 paquet est alors bloqué et doit attendre la réception du 1er ack pour que la fenêtre d'envoi coulisse.\\
 
-Pour qu'un attaquant puisse mettre en place cette attaque, il va forcer la longueur des données compressées jusqu'au seuil de fragmentation du paquet. Ainsi, selon que l'octet à deviner soit bon ou pas, la compression sera plus ou moins performante, et le paquet sera ou non fragmenté. De plus, il faut qu'il comble toute la fenêtre TCP. Ainsi, tout paquet additionnel due à une mauvaise valeur de l'octet recherché rajoutera un RTT avec un delai relativement significatif.
+Pour qu'un attaquant puisse mettre en place cette attaque, il va forcer la longueur des données compressées jusqu'au seuil de fragmentation du paquet. Ainsi, selon que l'octet à deviner soit bon ou pas, la compression sera plus ou moins performante, et le paquet sera ou non fragmenté. De plus, il faut qu'il comble toute la fenêtre TCP. Ainsi, tout paquet additionnel dû à une mauvaise valeur de l'octet recherché rajoutera un RTT avec un délai relativement significatif.
 Pour un octet valide, le RTT sera alors plus court que pour un octet invalide.
 
 \paragraph{}
-Il est fort probable que du bruit soit présent sur le réseau. Si c'est le cas, pour chaque valeur d'un octet à deviner, il sera utile d'envoyer plusieurs fois la même requête et de considérer le temps de réponse minimale comme la valeur du RTT. Le RTT le plus court pour les différentes valeur d'un octet est alors considérée comme la bonne valeur.\\
+Il est fort probable que du bruit soit présent sur le réseau. Si c'est le cas, pour chaque valeur d'un octet à deviner, il sera utile d'envoyer plusieurs fois la même requête et de considérer le temps de réponse minimale comme la valeur du RTT. Le RTT le plus court pour les différentes valeurs d'un octet est alors considéré comme la bonne valeur.\\
 
 De proche en proche, l'attaquant peut récupérer le cookie de session de la victime et toutes autres données secrètes insérées dans le corps de la réponse.
 
@@ -34,9 +34,9 @@ De proche en proche, l'attaquant peut récupérer le cookie de session de la vic
 Pour que cette attaque fonctionne, il faut que l'ajout de l'attaquant dans le header soit également présent dans le corps de la réponse. Si c'est le cas, la compression sera efficace, sinon, rien ne sera mesurable par l'attaquant.
 
 \paragraph{}
-Cette attaque étant une fois de plus due à des problèmes d'implémentations, les contre-mesures suivante sont ciblées sur cette dernière :
+Cette attaque étant une fois de plus due à des problèmes d'implémentations, les contre-mesures suivantes sont ciblées sur cette dernière :
 \begin{itemize}
-  \item Ajouter un delai aléatoire lors du déchiffrement peut rendre plus compliquer la recherche de la donnée secrète.
+  \item Ajouter un délai aléatoire lors du déchiffrement peut rendre plus compliquer la recherche de la donnée secrète.
   \item Désactiver la compression au niveau de HTTP. Cependant, ce n'est pas faisable sans impacter la performance et la rapidité des serveurs web.
   \item Les contrôles doivent êtres plus rigoureux dans l'utilisation des entrées utilisateur dans les réponses HTTP.
   \item Utiliser des techniques pour limiter les requêtes répétitives.

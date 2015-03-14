@@ -1,7 +1,7 @@
 \chapter{Lucky 13}
 \label{chapter:luck}
 
-En cryptanalyse, une timing attack\up{\cite{article:Timming}} est une attaque par cannaux cachés dans laquelle 
+En cryptanalyse, une timing attack\up{\cite{article:Timming}} est une attaque par canaux cachés dans laquelle 
 un attaquant tente de compromettre un crypto-système en analysant le temps d'exécution 
 de l'algorithme cryptographique. TIME, BREACH  et Lucky13 en font partie.
 
@@ -23,25 +23,25 @@ Soit un message M de 77 octets reçu par le serveur, \[ M = Sequence (8) || Head
 
 Quand le serveur reçoit un message M, il le déchiffre et vérifie la taille du padding. 
 Ensuite il doit hasher  $M = Sequence (8) || Header (5) || Data (D = 44 - p)$  et le comparer au MAC 
-pour vérifier l'intégrité. Afin de savoir où se termine les données, il se sert de la taille du Padding.
+pour vérifier l'intégrité. Afin de savoir où se terminent les données, il se sert de la taille du Padding.
 
-Il y a trois cas possible : 
+Il y a trois cas possibles : 
 \begin{itemize}
 \item Le padding a une taille invalide alors p vaut 0 octet. $D=44$
 \item le padding a une taille valide de 0. $D=43$ 
-\item la padding a une taile valide de 1.$D=42$
+\item le padding a une taille valide de 1.$D=42$
 \end{itemize}
 
-Le seveur va hashé son message pour le vérifier au MAC. Les hashs utilisés par SSL
+Le serveur va hasher son message pour le vérifier au MAC. Les hashs utilisés par SSL
 ont des blocs de 64 octets, donc si un message fait plus de 64 octets, il aura deux
-opérations de hash. De plus, c'est fonction ajoute au message au moins 1 octet de 
+opérations de hash. De plus, cette fonction ajoute au message au moins 1 octet de 
 padding et 8 octets pour la longueur.
 
 Dans notre cas, le hash fait 13 + D + 9. Ce qui donne respectivement pour nos trois cas :
-66, 65 et 64 octet. Le troisième aura une seule opération de MAC et deux pour les autres.
+66, 65 et 64 octets. Le troisième aura une seule opération de MAC et deux pour les autres.
 Il est possible avec une TIMMING Attack de voir la différence. 
 
-L'attaque Lucky 13 se base sur ça pour son attaque. Quand elle repére une différence
+L'attaque Lucky 13 se base sur cela pour son attaque. Quand elle repère une différence
 notable, elle peut appliquer la formule du Padding Oracle Attack.
 
 \section{Contre-Mesures}

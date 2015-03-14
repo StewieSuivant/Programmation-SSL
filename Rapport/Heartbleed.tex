@@ -5,11 +5,11 @@
 \paragraph{}
 Heartbleed\up{\cite{article:Heartbleed2}}, présente depuis mars 2012, a été révélée en avril 2014 par l'équipe de sécurité de Google et des ingénieurs de Codenomicon (société finlandaise). C'est une vulnérabilité logicielle due à une erreur de programmation dans la librairie openSSL.
 
-Contrairement aux attaques précédentes qui cible assez clairement les informations à extraires, Heartbleed ne permet pas de choisir ce que l'on veut récupérer. Un attaquant utilisant cette attaque peut lire la mémoire d'un serveur et peut récupérer aussi bien des clés privées que des choses sans importances.
+Contrairement aux attaques précédentes qui ciblent assez clairement les informations à extraire, Heartbleed ne permet pas de choisir ce que l'on veut récupérer. Un attaquant utilisant cette attaque peut lire la mémoire d'un serveur et peut récupérer aussi bien des clés privées que des choses sans importance.
 
 \section{Comment ça marche}
 \paragraph{}
-Le problème vient de l'extension heartbeat qui permet, sans renégotiation, de demander au serveur si la connexion est toujours active. Le fonctionnement du protocole est le suivant :
+Le problème vient de l'extension heartbeat qui permet, sans renégociation, de demander au serveur si la connexion est toujours active. Le fonctionnement du protocole est le suivant :
 \begin{itemize}
   \item Le navigateur envoie une requête au serveur en lui demandant, si la connexion est toujours active, de lui renvoyer "ack" qui fait 3 lettres.
   \item Le serveur reçoit la demande et répond en lui envoyant :
@@ -19,7 +19,7 @@ Le problème vient de l'extension heartbeat qui permet, sans renégotiation, de 
 \end{itemize}
 
 \paragraph{}
-Il faut savoir que lorsqu'un serveur reçoit une requête, il l'enregistre dans ses logs. Un attaquant sachant celà peut modifier légèrement la requête pour récupérer de l'information.
+Il faut savoir que lorsqu'un serveur reçoit une requête, il l'enregistre dans ses logs. Un attaquant sachant cela peut modifier légèrement la requête pour récupérer de l'information.
 \begin{itemize}
   \item Le navigateur de l'attaquant envoie une requête au serveur en lui demandant, si la connexion est toujours active, de lui renvoyer "ack" qui fait 250 lettres.
   \item Le serveur reçoit la demande et répond en lui envoyant :
@@ -38,7 +38,7 @@ Il faut savoir que lorsqu'un serveur reçoit une requête, il l'enregistre dans 
 \end{itemize}
 
 \paragraph{}
-Le serveur va en fait prendre en compte la longueur demandé et non la taille du mot demandé. Ainsi, bien que le navigateur demande au serveur de lui renvoyer "ack", le serveur va déborder dans sa mémoire et renvoyer les logs d'autres requêtes.\\
+Le serveur va en fait prendre en compte la longueur demandé et non la taille du mot demandée. Ainsi, bien que le navigateur demande au serveur de lui renvoyer "ack", le serveur va déborder dans sa mémoire et renvoyer les logs d'autres requêtes.\\
 
 \begin{figure}[h]
 \label{fig:Heartbleed}
@@ -47,7 +47,7 @@ Le serveur va en fait prendre en compte la longueur demandé et non la taille du
 \caption{Principe de Heartbleed\up{\cite{article:Heartbleed}}}
 \end{figure}
 
-Ci-dessous est présenté la structure d'un message Heartbeat\up{\cite{article:ZDNet}}.
+Ci-dessous est présentée la structure d'un message Heartbeat\up{\cite{article:ZDNet}}.
 \begin{verbatim}
 struct {
 HeartbeatMessageType type;
@@ -61,4 +61,4 @@ On peut remarquer que la longueur du message envoyé par le client est codée su
 
 \section{Contre-mesures}
 \paragraph{}
-Le code à l'origine de cette faille à d'ores et déjà été modifier. Il suffit donc d'utiliser la dernière version de TLS pour être à l'abris. Si cela n'est pas possible, il faut alors desactiver l'extension heartbeat.
+Le code à l'origine de cette faille à d'ores et déjà été modifié. Il suffit donc d'utiliser la dernière version de TLS pour être à l'abri. Si cela n'est pas possible, il faut alors désactiver l'extension heartbeat.

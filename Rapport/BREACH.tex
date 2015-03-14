@@ -3,9 +3,9 @@
 
 \section{Présentation}
 \paragraph{}
-BREACH\up{\cite{article:study}} à été présenté en août 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP.
+BREACH\up{\cite{article:study}} a été présenté en août 2013 par Yoel Gluck, Neal Harris et Angelo Prado. Là où CRIME vérifie la taille des données compressées par TLS, là où TIME va mesurer le temps de réponse des données compressées par HTTP, BREACH va regarder la taille des réponses compressées par HTTP.
 
-L'algorithme de compression utilisé est DEFLATE. Il utilise lui-même 2 autres algorithme : LZ77 et le codage de Huffman.
+L'algorithme de compression utilisé est DEFLATE. Il utilise lui-même 2 autres algorithmes : LZ77 et le codage de Huffman.
 
 \section{Comment ça marche}
 \paragraph{}
@@ -16,7 +16,7 @@ Les pré-requis pour satisfaire cette attaque sont les mêmes que CRIME :
 \end{itemize}
 
 \paragraph{}
-L'attaquant va envoyer une requête contenant dans l'entête 'CSRFtoken=x'. Ce bout de code sera alors présent dans le corps de la réponse, ainsi que la vrai valeur du CSRF. Lorsque le serveur web va compresser le corps de la réponse, si la valeur x est bonne, le chiffré sera plus court que si elle ne l'est pas. L'attaquant teste donc toute les valeurs de 'x' possible jusqu'à tomber sur un chiffré plus court que les autres.
+L'attaquant va envoyer une requête contenant dans l'en-tête 'CSRFtoken=x'. Ce bout de code sera alors présent dans le corps de la réponse, ainsi que la vraie valeur du CSRF. Lorsque le serveur web va compresser le corps de la réponse, si la valeur x est bonne, le chiffré sera plus court que si elle ne l'est pas. L'attaquant teste donc toutes les valeurs de 'x' possibles jusqu'à tomber sur un chiffré plus court que les autres.
 
 De proche en proche, il peut retrouver la valeur entière de la donnée secrète recherchée.\\
 
@@ -49,7 +49,7 @@ Comme dans TIME, l'attaque n'aboutit qu'à condition que la donnée secrète rec
 
 %\paragraph{}
 \begin{itemize}
-  \item Désactiver la compression au niveau de HTTP. Mais c'est à l'heure actuelle infaisable pour des raison de performance et de rapidité. 
+  \item Désactiver la compression au niveau de HTTP. Mais c'est à l'heure actuelle infaisable pour des raisons de performance et de rapidité. 
   \item Ajouter des données inutiles .
-  \item Utiliser des techniques pour limiter les requêtes répétiitves.
+  \item Utiliser des techniques pour limiter les requêtes répètitives.
 \end{itemize}
