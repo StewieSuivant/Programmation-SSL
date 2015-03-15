@@ -1,0 +1,204 @@
+%
+% Bordeaux Beamer Style - 1.0
+% Copyright © 2008-2009, Emmanuel Fleury <emmanuel.fleury@labri.fr>
+%
+% Permission is granted to copy, distribute and/or modify this
+% document under the terms of the GNU Free Documentation License,
+% Version 1.3 version published by the Free Software Foundation; with
+% no Invariant Sections, no Front-Cover Texts and no Back-Cover Texts.
+% A copy of the license can be found at http://www.gnu.org/licenses/.
+%
+
+
+%% Font packages
+%%%%%%%%%%%%%%%%
+\usepackage{mathptmx}
+%% Add boldface typewriter fonts
+\renewcommand{\ttdefault}{pcr}
+
+%% Tikz and pgf
+%%%%%%%%%%%%%%%
+\usepackage{tikz,pgf}
+
+%% Loading TiKz modules and libraries
+\usetikzlibrary{shadows,shapes,arrows}
+
+%% Other packages
+%%%%%%%%%%%%%%%%%
+\usepackage{listings}
+
+% For svgcolor, see: 
+% http://www.w3.org/TR/SVG/types.html#ColorKeywords
+\usepackage{svgcolor}
+
+%% Note about svgcolors:
+% The SVG colors are
+%
+% aliceblue, antiquewhite, aqua, aquamarine, azure, beige, bisque,
+% black, blanchedalmond, blue, blueviolet, brown, burlywood,
+% cadetblue, chartreuse, chocolate, coral, cornflowerblue, cornsilk,
+% crimson, cyan, darkblue, darkcyan, darkgoldenrod, darkgray,
+% darkgreen, darkgrey, darkkhaki, darkmagenta, darkolivegreen,
+% darkorange, darkorchid, darkred, darksalmon, darkseagreen,
+% darkslateblue, darkslategray, darkslategrey, darkturquoise,
+% darkviolet, deeppink, deepskyblue, dimgray, dimgrey, dodgerblue,
+% firebrick, floralwhite, forestgreen, fuchsia, gainsboro, ghostwhite,
+% gold, goldenrod, gray, green, greenyellow, grey, honeydew, hotpink,
+% indianred, indigo, ivory, khaki, lavender, lavenderblush, lawngreen,
+% lemonchiffon, lightblue, lightcoral, lightcyan,
+% lightgoldenrodyellow, lightgray, lightgreen, lightgrey, lightpink,
+% lightsalmon, lightseagreen, lightskyblue, lightslategray,
+% lightslategrey, lightsteelblue, lightyellow, lime, limegreen, linen,
+% magenta, maroon, mediumaquamarine, mediumblue, mediumorchid,
+% mediumpurple, mediumseagreen, mediumslateblue, mediumspringgreen,
+% mediumturquoise, mediumvioletred, midnightblue, mintcream,
+% mistyrose, moccasin, navajowhite, navy, oldlace, olive, olivedrab,
+% orange, orangered, orchid, palegoldenrod, palegreen, paleturquoise,
+% palevioletred, papayawhip, peachpuff, peru, pink, plum, powderblue,
+% purple, red, rosybrown, royalblue, saddlebrown, salmon, sandybrown,
+% seagreen, seashell, sienna, silver, skyblue, slateblue, slategray,
+% slategrey, snow, springgreen, steelblue, tan, teal, thistle, tomato,
+% turquoise, violet, wheat, white, whitesmoke, yellow, yellowgreen.
+
+%%%%% listings package custom settings %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\lstset{basicstyle=\ttfamily\small, aboveskip=1pt, belowskip=-4pt} 
+
+\lstdefinestyle{C}{%
+  language=C, commentstyle={\color{darkred}}, showstringspaces=false
+}
+
+%%%%% Setting Beamer Theme %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usetheme{Amsterdam}
+\usefonttheme{structurebold}
+
+% Remove navigation symbols
+\setbeamertemplate{navigation symbols}{}
+
+% University logo and licenses
+\pgfdeclareimage[width=3cm]{univ-bdx}{Universite_de_Bordeaux.pdf}
+%\pgfdeclareimage[width=1.25cm]{univ-bdx}{universite_bordeaux.pdf}
+
+ \mode<presentation>
+ {
+   \newcommand{\talencebackgroundtemplate}{
+     \begin{pgfpicture}{0cm}{0cm}{\the\paperwidth}{\the\paperheight}
+       % Do some clipping first
+       % Very annoying otherwise with psnup
+       \pgfsetcolor{white}
+       \pgfpathrectangle{\pgfpoint{0cm}{0cm}}{\pgfpoint{\the\paperwidth}{\the\paperheight}}
+       \pgfusepath{clip,fill}
+       \pgftext[at=\pgfpoint{\the\paperwidth}%
+                            {\the\paperheight-1.65cm},right,base]%
+                            {\pgfuseimage{univ-bdx}\,}
+
+       \pgfsetcolor{black}
+       \pgfpathrectangle{\pgfpoint{.15cm}{\the\paperheight-1.525cm}}%
+                        {\pgfpoint{\the\paperwidth-2.375cm}{1pt}}
+       \pgfusepath{fill}
+     \end{pgfpicture}
+     }
+}
+
+% Using custom background template
+\usebackgroundtemplate{\talencebackgroundtemplate}
+
+%% Unmasking the Logo
+\setbeamercolor{frametitle}{parent=normal}
+
+%%%%% Handout With Notes %%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% 2009 © Guido Diepen
+
+\RequirePackage{pgfpages}
+\pgfpagesdeclarelayout{4 on 1 with notes} {
+  \edef\pgfpageoptionheight{\the\paperheight}
+  \edef\pgfpageoptionwidth{\the\paperwidth}
+  \edef\pgfpageoptionborder{0pt}
+}
+{
+  \pgfpagesphysicalpageoptions
+  {%
+    logical pages=8,%
+    physical height=\pgfpageoptionheight,%
+    physical width=\pgfpageoptionwidth,%
+    last logical shipout=4%
+  }
+  
+  \pgfpageslogicalpageoptions{1}
+  {%
+    scale=.70,
+    center=\pgfpoint{.25\pgfphysicalwidth}{.875\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{2}
+  {%
+    scale=.70,
+    center=\pgfpoint{.25\pgfphysicalwidth}{.625\pgfphysicalheight}%
+  }%
+  
+  \pgfpageslogicalpageoptions{3}
+  {%
+    scale=.70,
+    center=\pgfpoint{.25\pgfphysicalwidth}{.375\pgfphysicalheight}%
+  }%
+  
+  \pgfpageslogicalpageoptions{4}
+  {%
+    scale=.70,
+    center=\pgfpoint{.25\pgfphysicalwidth}{.125\pgfphysicalheight}%
+  }%
+  
+  \pgfpageslogicalpageoptions{5}
+  {%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.3333\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.875\pgfphysicalheight},%
+    copy from=5
+  }%
+  \pgfpageslogicalpageoptions{6}
+  {%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.3333\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.625\pgfphysicalheight},%
+    copy from=6
+  }%
+  \pgfpageslogicalpageoptions{7}
+  {%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.3333\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.375\pgfphysicalheight},%
+    copy from=7
+  }%
+  \pgfpageslogicalpageoptions{8}
+  {%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.3333\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.125\pgfphysicalheight},%
+    copy from=8
+  }%
+  \AtBeginDocument{
+    \newbox\notesbox
+    \setbox\notesbox=\vbox{
+      \hsize=\paperwidth
+      \vskip-1in\hskip-1in\vbox{
+        \vskip1cm
+        Notes\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth\vskip1cm
+        \hrule width\paperwidth}
+    }
+    \pgfpagesshipoutlogicalpage{5}\copy\notesbox
+    \pgfpagesshipoutlogicalpage{6}\copy\notesbox
+    \pgfpagesshipoutlogicalpage{7}\copy\notesbox
+    \pgfpagesshipoutlogicalpage{8}\copy\notesbox
+  }
+}

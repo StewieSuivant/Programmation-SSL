@@ -1,0 +1,96 @@
+%
+% Permission is granted to copy, distribute and/or modify this
+% document under the terms of the Creative Common by-nc-sa License
+% version 3.0 (CC BY-NC-SA 3.0). A copy of the license can be found at
+% http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode.
+%
+
+\usepackage[french]{babel}
+
+% Highlight macros
+\newcommand{\highlight}[1]{\textcolor{structure.fg}{\bfseries #1}}
+
+%% Title, subtitle, authors, institute, date, ...
+\title{Attaque sur SSL/TLS}
+\subtitle{Poodle, une application du Padding Oracle Attack}
+
+\author[]{Youri Laforgue\\[-.25em]
+        \texttt{\scriptsize <youri.laforgue@etu.u-bordeaux.fr>}\\
+        Stewie Suivante\\[-.25em]
+        \texttt{\scriptsize <stewie.suivant@etu.u-bordeaux.fr>}}
+
+\institute[Master CSI, France]{Master CSI, Université de Bordeaux, France}
+
+\date{\today}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%[ Document ]%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+
+\begin{frame}
+  \vspace{3.5em}
+  \titlepage
+
+  \begin{center}
+    \includegraphics[scale=.2]{cc-by-nc-sa.pdf}
+  \end{center}
+\end{frame}
+
+\begin{frame}
+  \frametitle{Plan}
+  \tableofcontents[subsectionstyle=hide]
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Attaques sur SSL/TLS}
+
+\begin{frame}[fragile]
+  \frametitle{Classification }
+
+  \begin{itemize}
+  \item Oracle Attack
+  \item Padding Oracle Attack
+  \item Timming Attack
+  \item Compression Attack
+  \item Other
+  \end{itemize}
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Poodle}
+
+\begin{frame}<handout:0>
+  \frametitle{Plan}
+  \tableofcontents[currentsection]
+\end{frame}
+
+\begin{frame}
+  \frametitle{Poodle}
+  
+
+\end{frame}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Références}
+
+\begin{frame}<handout:0>
+  \frametitle{Plan}
+  \tableofcontents[currentsection,subsectionstyle=hide]
+\end{frame}
+
+\nocite{*}
+\bibliographystyle{alpha}
+
+\begin{frame}[allowframebreaks]
+  \frametitle{Références}
+  \bibliography{bibliography}
+\end{frame}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{frame}
+  \vfill
+  \centering
+  \highlight{\Huge Questions~?}
+  \vfill
+\end{frame}
