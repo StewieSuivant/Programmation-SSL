@@ -73,9 +73,18 @@
 \usetheme{Amsterdam}
 \usefonttheme{structurebold}
 
+% Add page number and title in foot page
+\setbeamertemplate{footline} {
+  \leavevmode%
+  \hbox{%
+  \begin{beamercolorbox}[wd=.666666\paperwidth,ht=2.25ex,dp=1ex,left]{author in head/foot}%
+    \usebeamerfont{author in head/foot} \insertshorttitle \end{beamercolorbox}%
+  \begin{beamercolorbox}[wd=.333333\paperwidth,ht=2.25ex,dp=1ex,right]{date in head/foot}%
+    \insertframenumber{} / \inserttotalframenumber\hspace*{2ex} \end{beamercolorbox}}%
+  \vskip0pt%
+}
 % Remove navigation symbols
 \setbeamertemplate{navigation symbols}{}
-
 % University logo and licenses
 \pgfdeclareimage[width=3cm]{univ-bdx}{Universite_de_Bordeaux.pdf}
 %\pgfdeclareimage[width=1.25cm]{univ-bdx}{universite_bordeaux.pdf}
